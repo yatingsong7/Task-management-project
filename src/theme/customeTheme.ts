@@ -4,18 +4,19 @@ const customTheme: ThemeOptions = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#F7EFE5",
+      main: "#F99417",
       light: "#C3ACD0",
       dark: "#674188",
     },
 
     background: {
-      default: "#FFFBF5",
-      paper: "#FFFBF5",
+      default: "#2D033B",
+      paper: "#2D033B",
     },
 
     text: {
-      primary: "#20262E",
+      primary: "#F7EFE5",
+      secondary: "#F2CD5C",
     },
   },
 });
