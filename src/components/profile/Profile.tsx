@@ -1,20 +1,30 @@
 import React, { FC, ReactElement } from "react";
 import { Avatar, Typography, Box } from "@mui/material";
+import PropTypes from "prop-types";
 
-export const Profile: FC = (props): ReactElement => {
+interface IProfile {
+  name?: string;
+  email?: string;
+}
+
+export const Profile: FC<IProfile> = (props: any): ReactElement => {
+  const { name = "User", email = "user@xx.com" } = props;
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <Avatar sx={{ bgcolor: "#3A1078", width: 80, height: 80, fontSize: 35 }} src="/broken-image.jpg">
-        B
+        {`${name.substring(0, 1)}`}
       </Avatar>
-      <Typography variant="h4" mt={2}>
-        Bella Song
+      <Typography variant="h5" mt={2}>
+        {`Welcome, ${name}`}
       </Typography>
-      <Typography variant="h6" mt={2}>
-        email address
-      </Typography>
+      <Typography mt={2}>{email}</Typography>
     </Box>
   );
 };
 
 export default Profile;
+
+Profile.propTypes = {
+  name: PropTypes.string,
+  email: PropTypes.string,
+};

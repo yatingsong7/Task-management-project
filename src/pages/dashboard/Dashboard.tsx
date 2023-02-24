@@ -17,7 +17,7 @@ const Dashboard: FC = (): ReactElement => {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <Profile />
+        <Profile name="Bella Song" email="yatingsong7@gmail.com" />
       </Grid2>
     </Grid2>
   );
