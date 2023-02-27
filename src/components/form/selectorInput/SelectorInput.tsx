@@ -1,7 +1,16 @@
 import React, { FC, ReactElement } from "react";
 import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { ISelectField } from "./ISelectorInput";
+import PropTypes from "prop-types";
 
-const SelectorInput: FC = (): ReactElement => {
+const SelectorInput: FC<ISelectField> = (props): ReactElement => {
+  const {
+    label = "label",
+    labelId = "option-label",
+    id = "Option",
+    value = "Option...",
+    options = [{ value: "", label: "Add Items" }],
+  } = props;
   return (
     <FormControl
       fullWidth
@@ -15,19 +24,31 @@ const SelectorInput: FC = (): ReactElement => {
           "&.Mui-focused fieldset": { color: "primary.main", borderColor: "primary.main" },
         },
       }}>
-      <InputLabel id="priority-label">Priority</InputLabel>
-      <Select
-        labelId="priority-label"
-        id="priority"
-        value={"todo"}
-        label="Priority"
-        onChange={(e: SelectChangeEvent) => console.log(e)}>
-        <MenuItem value={"todo"}>To Do</MenuItem>
-        <MenuItem value={"inProgress"}>In Progress</MenuItem>
-        <MenuItem value={"Done"}>Done</MenuItem>
+      <InputLabel id={labelId}>{label}</InputLabel>
+      <Select labelId={labelId} id={id} value={value} label={label} onChange={(e: SelectChangeEvent) => console.log(e)}>
+        {options.map((o) => {
+          return (
+            <MenuItem key={o.label} value={o.value}>
+              {o.label}
+            </MenuItem>
+          );
+        })}
       </Select>
     </FormControl>
   );
 };
 
 export default SelectorInput;
+
+SelectorInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  labelId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
+};
