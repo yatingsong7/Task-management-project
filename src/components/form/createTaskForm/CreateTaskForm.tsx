@@ -11,21 +11,17 @@ import { Priority } from "./enums/Priority";
 const CreateTaskForm = () => {
   return (
     <Box my={4}>
-      <Stack spacing={2}>
+      <Stack spacing={3}>
         <Typography sx={{ textTransform: "uppercase" }} fontWeight={700}>
           Create a task
         </Typography>
 
-        {/* Task Title */}
         <TextInput />
 
-        {/* Task description */}
         <TextArea />
 
-        {/* Due date */}
         <DateInput />
 
-        {/* Priority & status [TO DO, In progress, Done] */}
         <Box display="flex" flexDirection="row" gap={1}>
           <SelectorInput
             label="Status"

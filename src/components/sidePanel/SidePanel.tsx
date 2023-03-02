@@ -11,6 +11,7 @@ const SidePanel: FC = (): ReactElement => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
       }}>
       <Profile name="Bella Song" email="yatingsong7@gmail.com" />
       <CreateTaskForm />
