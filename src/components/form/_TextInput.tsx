@@ -18,6 +18,7 @@ const TextInput: FC = (): ReactElement => {
         },
         width: "100%",
       }}
+      onChange={(e) => console.log(e.target.value)}
     />
   );
 };

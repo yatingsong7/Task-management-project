@@ -1,10 +1,9 @@
 import React, { FC, ReactElement } from "react";
 import { Typography, Box, Stack } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import TextArea from "../textArea/TextArea";
-import TextInput from "../textInput/TextInput";
-import SelectorInput from "../selectorInput/SelectorInput";
-import DateInput from "../dateInput/DateInput";
+import TextArea from "./_TextArea";
+import TextInput from "./_TextInput";
+import SelectorInput from "./_SelectorInput";
+import DateInput from "./_DateInput";
 import { Status } from "./enums/Status";
 import { Priority } from "./enums/Priority";
 

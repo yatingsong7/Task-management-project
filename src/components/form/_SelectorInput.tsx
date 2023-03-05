@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
-import { ISelectField } from "./ISelectorInput";
+import { ISelectField } from "./interfaces/ISelectorInput";
 import PropTypes from "prop-types";
 
 const SelectorInput: FC<ISelectField> = (props): ReactElement => {

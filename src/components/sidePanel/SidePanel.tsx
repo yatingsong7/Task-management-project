@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import Profile from "../profile/Profile";
-import CreateTaskForm from "../form/createTaskForm/CreateTaskForm";
+import CreateTaskForm from "../form/CreateTaskForm";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
 const SidePanel: FC = (): ReactElement => {
