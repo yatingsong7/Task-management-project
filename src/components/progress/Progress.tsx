@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React, { FC, ReactElement } from "react";
-import Indicator from "./Indicator";
+import Indicator from "./_Indicator";
 import { INDICATOR_COLOR } from "./interfaces/IIndicator";
 
 const Progress: FC = (): ReactElement => {
