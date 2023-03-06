@@ -4,8 +4,8 @@ import TextArea from "./_TextArea";
 import TextInput from "./_TextInput";
 import SelectorInput from "./_SelectorInput";
 import DateInput from "./_DateInput";
-import { Status } from "./enums/Status";
-import { Priority } from "./enums/Priority";
+import { STATUS } from "./enums/STATUS";
+import { PRIORITY } from "./enums/PRIORITY";
 
 const CreateTaskForm = () => {
   return (
@@ -26,22 +26,22 @@ const CreateTaskForm = () => {
             label="Status"
             labelId="status-label"
             id="status"
-            value={Status.todo}
+            value={STATUS.todo}
             options={[
-              { label: Status.todo.toUpperCase(), value: Status.todo },
-              { label: Status.inProgress.toUpperCase(), value: Status.inProgress },
-              { label: Status.completed.toUpperCase(), value: Status.completed },
+              { label: STATUS.todo.toUpperCase(), value: STATUS.todo },
+              { label: STATUS.inProgress.toUpperCase(), value: STATUS.inProgress },
+              { label: STATUS.completed.toUpperCase(), value: STATUS.completed },
             ]}
           />
           <SelectorInput
             label="Priority"
             labelId="priority-label"
             id="priority"
-            value={Priority.low}
+            value={PRIORITY.low}
             options={[
-              { label: Priority.low.toUpperCase(), value: Priority.low },
-              { label: Priority.medium.toUpperCase(), value: Priority.medium },
-              { label: Priority.high.toUpperCase(), value: Priority.high },
+              { label: PRIORITY.low.toUpperCase(), value: PRIORITY.low },
+              { label: PRIORITY.medium.toUpperCase(), value: PRIORITY.medium },
+              { label: PRIORITY.high.toUpperCase(), value: PRIORITY.high },
             ]}
           />
         </Box>
