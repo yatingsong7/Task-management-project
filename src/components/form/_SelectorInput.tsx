@@ -17,7 +17,8 @@ const SelectorInput: FC<ISelectField> = (props): ReactElement => {
       sx={{
         "& label": { color: "text.primary" },
         "& label.Mui-focused": { color: "primary.main" },
-        "& label:hover": { color: "primary.main" },
+        "&:hover label": { color: "primary.main" },
+        "& svg": { color: "text.primary" },
         "& .MuiOutlinedInput-root": {
           "& fieldset": { borderColor: "text.primary" },
           "&:hover fieldset": { color: "primary.main", borderColor: "primary.main" },
