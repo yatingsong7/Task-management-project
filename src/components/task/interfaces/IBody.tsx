@@ -1,3 +1,3 @@
 export interface IBody {
-  taskBody: string;
+  taskBody?: string;
 }
