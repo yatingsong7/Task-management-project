@@ -39,7 +39,7 @@ const TasksArea: FC = (): ReactElement => {
               />
               {!isLoading ? (
                 data && data.length !== 0 ? (
-                  data.map((d) => {
+                  data.map((d, i) => {
                     return (
                       <Task
                         id={d.id}
@@ -48,6 +48,7 @@ const TasksArea: FC = (): ReactElement => {
                         priority={d.priority}
                         taskBody={d.description}
                         status={d.status}
+                        key={i}
                       />
                     );
                   })

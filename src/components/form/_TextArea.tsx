@@ -1,7 +1,11 @@
 import React, { FC, ReactElement } from "react";
 import { TextField } from "@mui/material";
+import { IInputField } from "./interfaces/IInputField";
+import PropTypes from "prop-types";
 
-const TextArea: FC = (): ReactElement => {
+const TextArea: FC<IInputField> = (props): ReactElement => {
+  const { onChange = (e) => console.log(e.target.value) } = props;
+
   return (
     <TextField
       id="Task Description"
@@ -20,8 +24,13 @@ const TextArea: FC = (): ReactElement => {
       }}
       multiline
       rows={4}
+      onChange={onChange}
     />
   );
 };
 
 export default TextArea;
+
+TextArea.propTypes = {
+  onChange: PropTypes.func,
+};

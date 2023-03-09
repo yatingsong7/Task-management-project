@@ -1,3 +1,5 @@
+import { SelectChangeEvent } from "@mui/material";
+
 export interface ISelectOptions {
   label: string;
   value: string;
@@ -9,4 +11,5 @@ export interface ISelectField {
   id: string;
   value: string;
   options: ISelectOptions[];
+  onChange?: (s: SelectChangeEvent) => void;
 }

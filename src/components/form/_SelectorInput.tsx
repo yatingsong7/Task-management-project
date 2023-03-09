@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from "react";
-import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { ISelectField } from "./interfaces/ISelectorInput";
 import PropTypes from "prop-types";
 
@@ -10,7 +10,9 @@ const SelectorInput: FC<ISelectField> = (props): ReactElement => {
     id = "Option",
     value = "Option...",
     options = [{ value: "", label: "Add Items" }],
+    onChange,
   } = props;
+
   return (
     <FormControl
       fullWidth
@@ -26,7 +28,7 @@ const SelectorInput: FC<ISelectField> = (props): ReactElement => {
         },
       }}>
       <InputLabel id={labelId}>{label}</InputLabel>
-      <Select labelId={labelId} id={id} value={value} label={label} onChange={(e: SelectChangeEvent) => console.log(e)}>
+      <Select labelId={labelId} id={id} value={value} label={label} onChange={onChange}>
         {options.map((o) => {
           return (
             <MenuItem key={o.label} value={o.value}>
@@ -52,4 +54,5 @@ SelectorInput.propTypes = {
       value: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
+  onChange: PropTypes.func,
 };

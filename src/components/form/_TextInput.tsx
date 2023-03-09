@@ -1,7 +1,10 @@
 import React, { FC, ReactElement } from "react";
 import { TextField } from "@mui/material";
+import { IInputField } from "./interfaces/IInputField";
+import PropTypes from "prop-types";
 
-const TextInput: FC = (): ReactElement => {
+const TextInput: FC<IInputField> = (props): ReactElement => {
+  const { onChange = (e) => console.log(e.target.value) } = props;
   return (
     <TextField
       id="Task Title"
@@ -18,9 +21,13 @@ const TextInput: FC = (): ReactElement => {
         },
         width: "100%",
       }}
-      onChange={(e) => console.log(e.target.value)}
+      onChange={onChange}
     />
   );
 };
 
 export default TextInput;
+
+TextInput.propTypes = {
+  onChange: PropTypes.func,
+};

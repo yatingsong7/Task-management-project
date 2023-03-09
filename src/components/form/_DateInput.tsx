@@ -1,17 +1,14 @@
-import { FC, ReactElement, useState } from "react";
+import { FC, ReactElement } from "react";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui//x-date-pickers/LocalizationProvider";
 import { TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { Dayjs } from "dayjs";
 import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField";
+import PropTypes from "prop-types";
+import { IDateInput } from "./interfaces/IDateInput";
 
-const DateInput: FC = (): ReactElement => {
-  const [value, setValue] = useState<Dayjs | null>();
-
-  const handleChange = (newValue: Dayjs | null) => {
-    setValue(newValue);
-  };
+const DateInput: FC<IDateInput> = (props): ReactElement => {
+  const { onChange = (date) => console.log(date), value } = props;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -19,7 +16,7 @@ const DateInput: FC = (): ReactElement => {
         label="Date"
         inputFormat="dd-MM-yyyy"
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         renderInput={(params: MuiTextFieldPropsType) => (
           <TextField
             {...params}
@@ -43,3 +40,8 @@ const DateInput: FC = (): ReactElement => {
 };
 
 export default DateInput;
+
+DateInput.propTypes = {
+  onChange: PropTypes.func,
+  value: PropTypes.instanceOf(Date),
+};
