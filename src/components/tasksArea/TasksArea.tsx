@@ -7,11 +7,21 @@ import Task from "../task/Task";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utilities/api";
 import { ITaskApi } from "./interfaces/ITaskApi";
+import { STATUS } from "../form/enums/STATUS";
 
 const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
     return await api<ITaskApi[]>("/tasks", "GET");
   });
+
+  const countTasks = (status: STATUS): number => {
+    if (data) {
+      const totalCount = data.filter((d) => d.status === status);
+      return totalCount.length;
+    }
+
+    return 0;
+  };
 
   return (
     <Grid2 xs={12} md={7}>
@@ -22,7 +32,11 @@ const TasksArea: FC = (): ReactElement => {
 
           {!error && (
             <>
-              <Progress />
+              <Progress
+                todoCount={countTasks(STATUS.todo)}
+                inProgressCount={countTasks(STATUS.inProgress)}
+                completeCount={countTasks(STATUS.completed)}
+              />
               {!isLoading ? (
                 data && data.length !== 0 ? (
                   data.map((d) => {
