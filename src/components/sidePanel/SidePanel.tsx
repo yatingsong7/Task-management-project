@@ -12,7 +12,7 @@ const SidePanel: FC = (): ReactElement => {
         display: "flex",
         flexDirection: "column",
       }}>
-      <Profile name="Bella Song" email="yatingsong7@gmail.com" />
+      <Profile name="Bella Song" email="email@email.com" />
       <CreateTaskForm />
     </Grid2>
   );

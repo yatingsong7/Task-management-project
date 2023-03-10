@@ -2,6 +2,7 @@ import { Box, FormControlLabel, Switch, Button } from "@mui/material";
 import React, { FC, ReactElement } from "react";
 import { IFooter } from "./interfaces/IFooter";
 import PropTypes from "prop-types";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const TaskFooter: FC<IFooter> = (props): ReactElement => {
   const {
@@ -27,16 +28,19 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
         }
         label="In progress"
       />
-      {!complete && (
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => {
-            handleMark(id);
-          }}>
-          Mark Complete
-        </Button>
-      )}
+      <Box display="flex" alignItems="center">
+        <DeleteForeverIcon sx={{ marginRight: "15px" }} />
+        {!complete && (
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              handleMark(id);
+            }}>
+            Mark Complete
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 };
