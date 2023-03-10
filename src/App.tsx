@@ -9,6 +9,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TaskContextProvider } from "./context/TaskContext";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,9 @@ const App: FC = (): ReactElement => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={customTheme}>
         <CssBaseline />
-        <Dashboard />
+        <TaskContextProvider>
+          <Dashboard />
+        </TaskContextProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

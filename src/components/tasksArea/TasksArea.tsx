@@ -8,11 +8,18 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utilities/api";
 import { ITaskApi } from "./interfaces/ITaskApi";
 import { STATUS } from "../form/enums/STATUS";
+import { TaskContext } from "../../context/TaskContext";
 
 const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
     return await api<ITaskApi[]>("/tasks", "GET");
   });
+
+  const taskContext = useContext(TaskContext);
+
+  useEffect(() => {
+    refetch();
+  }, [taskContext.updated]);
 
   const countTasks = (status: STATUS): number => {
     if (data) {

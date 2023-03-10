@@ -1,4 +1,4 @@
-import { FC, ReactElement, useState, useEffect } from "react";
+import { FC, ReactElement, useState, useEffect, useContext } from "react";
 import { Typography, Box, Stack, Button, Alert } from "@mui/material";
 import TextArea from "./_TextArea";
 import TextInput from "./_TextInput";
@@ -7,6 +7,7 @@ import DateInput from "./_DateInput";
 import { STATUS } from "./enums/STATUS";
 import { PRIORITY } from "./enums/PRIORITY";
 import { api } from "../../utilities/api";
+import { TaskContext } from "../../context/TaskContext";
 
 const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
@@ -16,6 +17,8 @@ const CreateTaskForm: FC = (): ReactElement => {
   const [status, setStatus] = useState<STATUS>(STATUS.todo);
   const [error, setError] = useState<string | undefined>(undefined);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  const taskContext = useContext(TaskContext);
 
   const handleBtnClick = async () => {
     if (!title) {
@@ -30,7 +33,10 @@ const CreateTaskForm: FC = (): ReactElement => {
 
     const task = { title: title, description: desc, date: date, priority: priority, status: status };
     const response = await api("/tasks", "POST", task);
-    if (response) setShowSuccess(true);
+    if (response) {
+      setShowSuccess(true);
+      taskContext.toggle();
+    }
   };
 
   useEffect(() => {
