@@ -25,17 +25,23 @@ The following features have been implemented:
 - Install yarn via npm global
 
 - Clone the repo:
-  ```
-  $ git clone https://github.com/yatingsong7/Task-management-project.git
-  ```
+
+```
+$ git clone https://github.com/yatingsong7/Task-management-project.git
+```
+
 - Go to the project directory and install dependencies for backend:
-  ```
-  $ cd Task-management-project && yarn install
-  ```
+
+```
+$ cd Task-management-project && yarn install
+```
+
 - Go to the Front-end folder and install dependencies:
-  ```
-  $ cd Front-end && npm install
-  ```
+
+```
+$ cd Front-end && npm install
+```
+
 - Run MySQL server on your device
 
 To start backend server, in the project directory:
