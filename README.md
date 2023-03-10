@@ -1,7 +1,9 @@
 # Task Management Project
 
 A simple web-based task management project built with React, Node, Typescript and MySQL.
-This repository contains two parts, one React front-end folder and one backend server folder.
+This repository contains backend in main and the React front-end in [Front-end](https://github.com/yatingsong7/Task-management-project/tree/main/Front-end) folder.
+
+![](/Front-end/.github/Screenshot.png)
 
 ## Features
 
