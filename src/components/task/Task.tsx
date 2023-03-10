@@ -17,12 +17,20 @@ const Task: FC<ITask> = (props): ReactElement => {
     date = new Date(),
     priority = PRIORITY.low,
     status = STATUS.todo,
+    handleMark,
+    handleSwitch,
   } = props;
   return (
     <Box border={"2px solid"} borderRadius="5px" p={2} m={4} sx={{ borderColor: findColorForStatus(status) }}>
       <TaskHeader title={title} date={date} priority={priority} />
       <TaskBody taskBody={taskBody} />
-      <TaskFooter inProgress={inProgress} />
+      <TaskFooter
+        inProgress={inProgress}
+        complete={status === STATUS.completed ? true : false}
+        handleSwitch={handleSwitch}
+        handleMark={handleMark}
+        id={id}
+      />
     </Box>
   );
 };
@@ -30,12 +38,13 @@ const Task: FC<ITask> = (props): ReactElement => {
 export default Task;
 
 Task.propTypes = {
-  id: PropTypes.number,
   title: PropTypes.string.isRequired,
   date: PropTypes.instanceOf(Date),
   inProgress: PropTypes.bool,
   taskBody: PropTypes.string.isRequired,
   priority: PropTypes.oneOf(Object.values(PRIORITY) as PRIORITY[]),
+  handleMark: PropTypes.func,
+  handleSwitch: PropTypes.func,
 };
 
 const findColorForStatus = (status: STATUS) => {

@@ -5,7 +5,7 @@ import TasksArea from "../../components/tasksArea/TasksArea";
 
 const Dashboard: FC = (): ReactElement => {
   return (
-    <Grid2 container p={2} columnSpacing={2} height={"98vh"} width={"100vw"}>
+    <Grid2 container p={2} columnSpacing={2} height={"96vh"} width={"98vw"}>
       <TasksArea />
       <SidePanel />
     </Grid2>

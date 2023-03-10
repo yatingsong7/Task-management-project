@@ -4,7 +4,13 @@ import { IFooter } from "./interfaces/IFooter";
 import PropTypes from "prop-types";
 
 const TaskFooter: FC<IFooter> = (props): ReactElement => {
-  const { inProgress = false } = props;
+  const {
+    inProgress = false,
+    complete = false,
+    handleSwitch = (e) => console.log(e),
+    handleMark = (e) => console.log(e),
+    id,
+  } = props;
   return (
     <Box display="flex" justifyContent="space-between">
       <FormControlLabel
@@ -12,15 +18,25 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
           <Switch
             sx={{ "& .MuiSwitch-track": { backgroundColor: "text.primary" } }}
             color="primary"
-            onChange={(e) => console.log(e.target.checked)}
+            onChange={(e) => {
+              handleSwitch(e, id);
+            }}
             defaultChecked={inProgress}
+            checked={inProgress}
           />
         }
         label="In progress"
       />
-      <Button variant="contained" color="success">
-        Mark Complete
-      </Button>
+      {!complete && (
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            handleMark(id);
+          }}>
+          Mark Complete
+        </Button>
+      )}
     </Box>
   );
 };
@@ -29,4 +45,7 @@ export default TaskFooter;
 
 TaskFooter.propTypes = {
   inProgress: PropTypes.bool,
+  complete: PropTypes.bool,
+  handleMark: PropTypes.func,
+  handleSwitch: PropTypes.func,
 };

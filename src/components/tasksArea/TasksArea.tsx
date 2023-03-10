@@ -1,6 +1,6 @@
 import Grid2 from "@mui/material/Unstable_Grid2";
-import React, { FC, ReactElement, useEffect, useState } from "react";
-import { Alert, Box, LinearProgress, Typography } from "@mui/material";
+import React, { FC, ReactElement, useContext, useEffect } from "react";
+import { Alert, Box, LinearProgress } from "@mui/material";
 import { format } from "date-fns";
 import Progress from "../progress/Progress";
 import Task from "../task/Task";
@@ -21,6 +21,22 @@ const TasksArea: FC = (): ReactElement => {
     }
 
     return 0;
+  };
+
+  const handleMark = async (id: number) => {
+    const task = { id: id, status: STATUS.completed };
+    const response: any = await api("/tasks", "PUT", task);
+    if (response.affected !== 0) {
+      refetch();
+    }
+  };
+
+  const handleSwitch = async (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const task = { id: id, status: e.target.checked ? STATUS.inProgress : STATUS.todo };
+    const response: any = await api("/tasks", "PUT", task);
+    if (response.affected !== 0) {
+      refetch();
+    }
   };
 
   return (
@@ -49,6 +65,9 @@ const TasksArea: FC = (): ReactElement => {
                         taskBody={d.description}
                         status={d.status}
                         key={i}
+                        inProgress={d.status === STATUS.inProgress ? true : false}
+                        handleMark={handleMark}
+                        handleSwitch={handleSwitch}
                       />
                     );
                   })

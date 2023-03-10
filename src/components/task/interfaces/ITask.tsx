@@ -4,6 +4,5 @@ import { IFooter } from "./IFooter";
 import { IHeader } from "./IHeader";
 
 export interface ITask extends IHeader, IBody, IFooter {
-  id?: number;
   status?: STATUS;
 }
