@@ -25,20 +25,34 @@ The following features have been implemented:
 - Install yarn via npm global
 
 - Clone the repo:
-  `$ git clone https://github.com/yatingsong7/Task-management-project.git`
+  ```
+  $ git clone https://github.com/yatingsong7/Task-management-project.git
+  ```
 - Go to the project directory and install dependencies for backend:
-  `$ cd Task-management-project && yarn install`
+  ```
+  $ cd Task-management-project && yarn install
+  ```
 - Go to the Front-end folder and install dependencies:
-  `$ cd Front-end && npm install`
+  ```
+  $ cd Front-end && npm install
+  ```
 - Run MySQL server on your device
 
 To start backend server, in the project directory:
-`$ npm run dev`
+
+```
+$ npm run dev
+```
+
 The api should be running in 3200 port and the database should be in 3307 port.
 
 To Start web application, go to the Front-end folder and run:
-`$ npm start`
-It will automatically open the browser, or if not, go to <u>localhost:3200</u> in your browser
+
+```
+$ npm start
+```
+
+It will automatically open the browser, or if not, go to localhost:3200 in your browser
 
 ## Project Structure
 
