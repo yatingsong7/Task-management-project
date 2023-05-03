@@ -46,6 +46,13 @@ const TasksArea: FC = (): ReactElement => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    const response: any = await api("/tasks", "DELETE", { id: id });
+    if (response.affected !== 0) {
+      refetch();
+    }
+  };
+
   return (
     <Grid2 xs={12} md={7}>
       <Box>
@@ -75,6 +82,7 @@ const TasksArea: FC = (): ReactElement => {
                         inProgress={d.status === STATUS.inProgress ? true : false}
                         handleMark={handleMark}
                         handleSwitch={handleSwitch}
+                        handleDelete={handleDelete}
                       />
                     );
                   })

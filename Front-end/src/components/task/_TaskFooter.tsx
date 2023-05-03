@@ -10,6 +10,7 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
     complete = false,
     handleSwitch = (e) => console.log(e),
     handleMark = (e) => console.log(e),
+    handleDelete = (e) => console.log(e),
     id,
   } = props;
   return (
@@ -29,7 +30,12 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
         label="In progress"
       />
       <Box display="flex" alignItems="center">
-        <DeleteForeverIcon sx={{ marginRight: "15px" }} />
+        <DeleteForeverIcon
+          sx={{ marginRight: "15px", cursor: "pointer" }}
+          onClick={() => {
+            handleDelete(id);
+          }}
+        />
         {!complete && (
           <Button
             variant="contained"

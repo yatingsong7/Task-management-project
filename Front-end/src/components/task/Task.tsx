@@ -19,6 +19,7 @@ const Task: FC<ITask> = (props): ReactElement => {
     status = STATUS.todo,
     handleMark,
     handleSwitch,
+    handleDelete,
   } = props;
   return (
     <Box border={"2px solid"} borderRadius="5px" p={2} m={4} sx={{ borderColor: findColorForStatus(status) }}>
@@ -29,6 +30,7 @@ const Task: FC<ITask> = (props): ReactElement => {
         complete={status === STATUS.completed ? true : false}
         handleSwitch={handleSwitch}
         handleMark={handleMark}
+        handleDelete={handleDelete}
         id={id}
       />
     </Box>
@@ -45,6 +47,7 @@ Task.propTypes = {
   priority: PropTypes.oneOf(Object.values(PRIORITY) as PRIORITY[]),
   handleMark: PropTypes.func,
   handleSwitch: PropTypes.func,
+  handleDelete: PropTypes.func,
 };
 
 const findColorForStatus = (status: STATUS) => {

@@ -66,7 +66,7 @@ class TaskController {
 
     try {
       await taskRepo.delete(req.body.id);
-      return res.status(200).send();
+      return res.status(200).send({ success: true });
     } catch (e) {
       return res.status(500).send(e);
     }

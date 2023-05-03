@@ -14,6 +14,7 @@ The following features have been implemented:
 - View counts of to-do, in-progress, completed tasks on top of tasks
 - Mark a to-do or in-progress task as completed
 - Mark a to-do or completed task as in-progress
+- Delete a task
 - See a task status by border color of the task card (to-do: red, in-progree: yellow, completed: green). The colors match with the ones used in task count area
 - Error message for task created without title and due date
 - Successful created message showing 3 seconds when tasks being successfully created
@@ -43,8 +44,10 @@ $ cd Front-end && npm install
 ```
 
 - Run MySQL server on your device
+  Install MySQL server and follow the steps to start it  
+  https://www.tutorialspoint.com/starting-and-stopping-mysql-server
 
-To start backend server, in the project directory:
+**To start backend server, in the project directory:**
 
 ```
 $ npm run dev
@@ -52,7 +55,7 @@ $ npm run dev
 
 The api should be running in 3200 port and the database should be in 3307 port.
 
-To Start web application, go to the Front-end folder and run:
+**To Start web application, go to the Front-end folder and run:**
 
 ```
 $ npm start
@@ -91,7 +94,6 @@ prop-types
 
 ## Upcoming Features
 
-- Delete task
 - User login and logout
 - Filter tasks based on due dates, status and priority
 - Subtasks and checklists of a task
