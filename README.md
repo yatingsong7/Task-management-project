@@ -16,6 +16,7 @@ The following features have been implemented:
 - Mark a to-do or completed task as in-progress
 - Delete a task
 - See a task status by border color of the task card (to-do: red, in-progree: yellow, completed: green). The colors match with the ones used in task count area
+- Filter tasks based on due dates, status and priority
 - Error message for task created without title and due date
 - Successful created message showing 3 seconds when tasks being successfully created
 - Responsive for small screens
@@ -95,5 +96,8 @@ prop-types
 ## Upcoming Features
 
 - User login and logout
-- Filter tasks based on due dates, status and priority
-- Subtasks and checklists of a task
+- Order tasks based on due dates, status and priority
+- Set checklists of a task
+- Set prerequisite tasks of a task
+- Select up to 5 tasks and see their progresses
+- Set priority for checklists
