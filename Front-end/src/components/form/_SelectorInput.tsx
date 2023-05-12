@@ -26,12 +26,13 @@ const SelectorInput: FC<ISelectField> = (props): ReactElement => {
           "&:hover fieldset": { color: "primary.main", borderColor: "primary.main" },
           "&.Mui-focused fieldset": { color: "primary.main", borderColor: "primary.main" },
         },
-      }}>
+      }}
+    >
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select labelId={labelId} id={id} value={value} label={label} onChange={onChange}>
         {options.map((o) => {
           return (
-            <MenuItem key={o.label} value={o.value}>
+            <MenuItem key={o.label} value={o.value} sx={{ backgroundColor: "#EBB02D", fontWeight: "bold" }}>
               {o.label}
             </MenuItem>
           );
