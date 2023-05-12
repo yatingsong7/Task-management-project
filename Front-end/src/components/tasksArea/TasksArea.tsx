@@ -1,5 +1,5 @@
 import Grid2 from "@mui/material/Unstable_Grid2";
-import React, { FC, ReactElement, useContext, useEffect } from "react";
+import React, { FC, ReactElement, useContext, useEffect, useState } from "react";
 import { Alert, Box, LinearProgress } from "@mui/material";
 import { format } from "date-fns";
 import Progress from "../progress/Progress";
@@ -14,6 +14,7 @@ const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
     return await api<ITaskApi[]>("/tasks", "GET");
   });
+  const [filterResults, setFilterResults] = useState<Array<ITaskApi> | undefined>(undefined);
 
   const taskContext = useContext(TaskContext);
 
@@ -53,6 +54,11 @@ const TasksArea: FC = (): ReactElement => {
     }
   };
 
+  const handleFilter = (status: string) => {
+    const filterData = data && data.filter((d) => d.status.toLowerCase() === status.toLowerCase());
+    setFilterResults(filterData);
+  };
+
   return (
     <Grid2 xs={12} md={7}>
       <Box>
@@ -66,9 +72,28 @@ const TasksArea: FC = (): ReactElement => {
                 todoCount={countTasks(STATUS.todo)}
                 inProgressCount={countTasks(STATUS.inProgress)}
                 completeCount={countTasks(STATUS.completed)}
+                handleFilter={handleFilter}
               />
               {!isLoading ? (
-                data && data.length !== 0 ? (
+                filterResults ? (
+                  filterResults.map((d, i) => {
+                    return (
+                      <Task
+                        id={d.id}
+                        title={d.title}
+                        date={new Date(d.date)}
+                        priority={d.priority}
+                        taskBody={d.description}
+                        status={d.status}
+                        key={i}
+                        inProgress={d.status === STATUS.inProgress ? true : false}
+                        handleMark={handleMark}
+                        handleSwitch={handleSwitch}
+                        handleDelete={handleDelete}
+                      />
+                    );
+                  })
+                ) : data && data.length !== 0 ? (
                   data.map((d, i) => {
                     return (
                       <Task

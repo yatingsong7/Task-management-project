@@ -12,4 +12,5 @@ export interface IIndicator {
   color: INDICATOR_COLOR;
   label: string;
   count: number;
+  handleFilter?: (status: string) => void;
 }
