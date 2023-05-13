@@ -1,15 +1,17 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactElement, useContext, useEffect } from "react";
 import Profile from "../profile/Profile";
 import CreateTaskForm from "../form/CreateTaskForm";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { Button, Box } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import { EditTaskContext } from "../../context/EditTaskContext";
 
 type Anchor = "top" | "right";
 
 const SidePanel: FC = (): ReactElement => {
+  const editTaskContext = useContext(EditTaskContext);
   const [state, setState] = React.useState({
-    top: false,
+    top: editTaskContext.isOpen,
     right: false,
   });
 
@@ -21,9 +23,13 @@ const SidePanel: FC = (): ReactElement => {
     ) {
       return;
     }
-
+    if (anchor === "top") editTaskContext.toggleIsOpen();
     setState({ ...state, [anchor]: open });
   };
+
+  useEffect(() => {
+    setState({ ...state, top: editTaskContext.isOpen });
+  }, [editTaskContext.isOpen]);
 
   return (
     <Grid2

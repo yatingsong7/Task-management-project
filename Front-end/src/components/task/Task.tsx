@@ -20,6 +20,7 @@ const Task: FC<ITask> = (props): ReactElement => {
     handleMark,
     handleSwitch,
     handleDelete,
+    handleManageTask,
   } = props;
   return (
     <Box border={"2px solid"} borderRadius="5px" p={2} m={4} sx={{ borderColor: findColorForStatus(status) }}>
@@ -31,6 +32,7 @@ const Task: FC<ITask> = (props): ReactElement => {
         handleSwitch={handleSwitch}
         handleMark={handleMark}
         handleDelete={handleDelete}
+        handleManageTask={handleManageTask}
         id={id}
       />
     </Box>

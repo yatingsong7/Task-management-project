@@ -3,14 +3,16 @@ import React, { FC, ReactElement } from "react";
 import { IFooter } from "./interfaces/IFooter";
 import PropTypes from "prop-types";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 
 const TaskFooter: FC<IFooter> = (props): ReactElement => {
   const {
     inProgress = false,
     complete = false,
-    handleSwitch = (e) => console.log(e),
-    handleMark = (e) => console.log(e),
-    handleDelete = (e) => console.log(e),
+    handleSwitch = () => console.log(),
+    handleMark = () => console.log(),
+    handleDelete = () => console.log(),
+    handleManageTask = () => console.log(),
     id,
   } = props;
   return (
@@ -30,6 +32,12 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
         label="In progress"
       />
       <Box display="flex" alignItems="center">
+        <EditIcon
+          sx={{ marginRight: "15px", cursor: "pointer" }}
+          onClick={() => {
+            handleManageTask(id);
+          }}
+        />
         <DeleteForeverIcon
           sx={{ marginRight: "15px", cursor: "pointer" }}
           onClick={() => {
@@ -42,7 +50,8 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
             color="success"
             onClick={() => {
               handleMark(id);
-            }}>
+            }}
+          >
             Mark Complete
           </Button>
         )}

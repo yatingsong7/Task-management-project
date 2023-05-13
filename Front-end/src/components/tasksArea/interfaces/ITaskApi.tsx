@@ -9,3 +9,9 @@ export interface ITaskApi {
   status: STATUS;
   priority: PRIORITY;
 }
+
+export interface IFilterGroup {
+  filterResults: ITaskApi[] | undefined;
+  data: ITaskApi[] | undefined;
+  setFilterResults: React.Dispatch<React.SetStateAction<ITaskApi[] | undefined>> | undefined;
+}

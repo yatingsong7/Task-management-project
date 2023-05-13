@@ -1,6 +1,6 @@
 import Grid2 from "@mui/material/Unstable_Grid2";
 import React, { FC, ReactElement, useContext, useEffect, useState } from "react";
-import { Alert, Box, LinearProgress, Button } from "@mui/material";
+import { Alert, Box, LinearProgress } from "@mui/material";
 import { format } from "date-fns";
 import Progress from "../progress/Progress";
 import Task from "../task/Task";
@@ -9,21 +9,17 @@ import { api } from "../../utilities/api";
 import { ITaskApi } from "./interfaces/ITaskApi";
 import { STATUS } from "../form/enums/STATUS";
 import { TaskContext } from "../../context/TaskContext";
-import SelectorInput from "../form/_SelectorInput";
-import { PRIORITY } from "../form/enums/PRIORITY";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterGroup from "./_filterGroup";
+import { EditTaskContext } from "../../context/EditTaskContext";
 
 const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
     return await api<ITaskApi[]>("/tasks", "GET");
   });
   const [filterResults, setFilterResults] = useState<Array<ITaskApi> | undefined>(undefined);
-  const [showFilter, setShowFilter] = useState<Boolean>(false);
-  const [filterByPriority, setFilterByPriority] = useState<PRIORITY | "">("");
-  const [filterByDue, setFilterByDue] = useState<string>("");
-  const [filterByStatus, setFilterByStatus] = useState<STATUS | "">("");
 
   const taskContext = useContext(TaskContext);
+  const editTaskContext = useContext(EditTaskContext);
 
   useEffect(() => {
     refetch();
@@ -66,25 +62,8 @@ const TasksArea: FC = (): ReactElement => {
     setFilterResults(filterData);
   };
 
-  const handleFilter = () => {
-    let filterData = data;
-    if (filterByStatus)
-      filterData = filterData && filterData.filter((d) => d.status.toLowerCase() === filterByStatus.toLowerCase());
-
-    if (filterByPriority)
-      filterData = filterData && filterData.filter((d) => d.priority.toLowerCase() === filterByPriority.toLowerCase());
-
-    if (filterByDue) {
-      if (filterByDue === "Not due") {
-        filterData = filterData && filterData.filter((d) => !d.date || new Date(d.date) > new Date());
-      } else if (filterByDue === "Due today") {
-        filterData = filterData && filterData.filter((d) => new Date(d.date) === new Date());
-      } else if (filterByDue === "Overdue") {
-        filterData = filterData && filterData.filter((d) => new Date(d.date) < new Date());
-      }
-    }
-
-    setFilterResults(filterData);
+  const handleManageTask = (id: number) => {
+    editTaskContext.toggleIsOpen();
   };
 
   return (
@@ -102,84 +81,7 @@ const TasksArea: FC = (): ReactElement => {
                 completeCount={countTasks(STATUS.completed)}
                 handleFilter={handleFilterByStatus}
               />
-              <Box marginX={4} display="flex" flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ fontSize: "16px", fontWeight: "bold" }}
-                  onClick={() => {
-                    setShowFilter(!showFilter);
-                    setFilterByDue("");
-                    setFilterByPriority("");
-                    setFilterByStatus("");
-                  }}
-                >
-                  Filter by
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setFilterResults(undefined);
-                  }}
-                  disabled={!filterResults}
-                  sx={{ fontSize: "16px", fontWeight: "bold" }}
-                >
-                  SHOW ALL
-                </Button>
-              </Box>
-              {showFilter && (
-                <Box marginX={4} marginTop={2} display="flex" flexDirection={"row"}>
-                  <Box width="30%" mr={2}>
-                    <SelectorInput
-                      label="Filter by status"
-                      labelId="filter-status"
-                      id="filter-status"
-                      value={filterByStatus}
-                      options={[
-                        { label: "None", value: "" },
-                        { label: STATUS.todo.toUpperCase(), value: STATUS.todo },
-                        { label: STATUS.inProgress.toUpperCase(), value: STATUS.inProgress },
-                        { label: STATUS.completed.toUpperCase(), value: STATUS.completed },
-                      ]}
-                      onChange={(e) => setFilterByStatus(e.target.value as STATUS)}
-                    />
-                  </Box>
-                  <Box width="30%" mr={2}>
-                    <SelectorInput
-                      label="Filter by priority"
-                      labelId="filter-priority"
-                      id="filter-priority"
-                      value={filterByPriority}
-                      options={[
-                        { label: "None", value: "" },
-                        { label: PRIORITY.low.toUpperCase(), value: PRIORITY.low },
-                        { label: PRIORITY.medium.toUpperCase(), value: PRIORITY.medium },
-                        { label: PRIORITY.high.toUpperCase(), value: PRIORITY.high },
-                      ]}
-                      onChange={(e) => setFilterByPriority(e.target.value as PRIORITY)}
-                    />
-                  </Box>
-                  <Box width="30%" mr={1}>
-                    <SelectorInput
-                      label="Filter by due"
-                      labelId="filter-due"
-                      id="filter-due"
-                      value={filterByDue}
-                      options={[
-                        { label: "None", value: "" },
-                        { label: "NOT DUE", value: "Not due" },
-                        { label: "DUE TODAY", value: "Due today" },
-                        { label: "OVERDUE", value: "Overdue" },
-                      ]}
-                      onChange={(e) => setFilterByDue(e.target.value)}
-                    />
-                  </Box>
-                  <Button color="primary" onClick={handleFilter}>
-                    <FilterAltIcon fontSize="large" />
-                  </Button>
-                </Box>
-              )}
+              <FilterGroup filterResults={filterResults} data={data} setFilterResults={setFilterResults} />
 
               {!isLoading ? (
                 filterResults ? (
@@ -197,6 +99,7 @@ const TasksArea: FC = (): ReactElement => {
                         handleMark={handleMark}
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}
+                        handleManageTask={handleManageTask}
                       />
                     );
                   })
@@ -215,6 +118,7 @@ const TasksArea: FC = (): ReactElement => {
                         handleMark={handleMark}
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}
+                        handleManageTask={handleManageTask}
                       />
                     );
                   })
