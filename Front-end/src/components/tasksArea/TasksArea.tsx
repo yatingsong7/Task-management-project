@@ -1,6 +1,6 @@
 import Grid2 from "@mui/material/Unstable_Grid2";
 import React, { FC, ReactElement, useContext, useEffect, useState } from "react";
-import { Alert, Box, LinearProgress, Typography, Button } from "@mui/material";
+import { Alert, Box, LinearProgress, Button } from "@mui/material";
 import { format } from "date-fns";
 import Progress from "../progress/Progress";
 import Task from "../task/Task";
@@ -88,7 +88,7 @@ const TasksArea: FC = (): ReactElement => {
   };
 
   return (
-    <Grid2 xs={12} md={7}>
+    <Grid2 xs={12} md={10}>
       <Box>
         <>
           <h2 style={{ marginBottom: "30px" }}>Status Of Tasks As On {format(new Date(), "PPPP")}</h2>
@@ -137,6 +137,7 @@ const TasksArea: FC = (): ReactElement => {
                       id="filter-status"
                       value={filterByStatus}
                       options={[
+                        { label: "None", value: "" },
                         { label: STATUS.todo.toUpperCase(), value: STATUS.todo },
                         { label: STATUS.inProgress.toUpperCase(), value: STATUS.inProgress },
                         { label: STATUS.completed.toUpperCase(), value: STATUS.completed },
@@ -151,6 +152,7 @@ const TasksArea: FC = (): ReactElement => {
                       id="filter-priority"
                       value={filterByPriority}
                       options={[
+                        { label: "None", value: "" },
                         { label: PRIORITY.low.toUpperCase(), value: PRIORITY.low },
                         { label: PRIORITY.medium.toUpperCase(), value: PRIORITY.medium },
                         { label: PRIORITY.high.toUpperCase(), value: PRIORITY.high },
@@ -165,6 +167,7 @@ const TasksArea: FC = (): ReactElement => {
                       id="filter-due"
                       value={filterByDue}
                       options={[
+                        { label: "None", value: "" },
                         { label: "NOT DUE", value: "Not due" },
                         { label: "DUE TODAY", value: "Due today" },
                         { label: "OVERDUE", value: "Overdue" },

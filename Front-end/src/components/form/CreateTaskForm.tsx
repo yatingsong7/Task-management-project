@@ -51,7 +51,7 @@ const CreateTaskForm: FC = (): ReactElement => {
   return (
     <Box my={4}>
       <Stack spacing={3}>
-        <Typography sx={{ textTransform: "uppercase" }} fontWeight={700}>
+        <Typography sx={{ textTransform: "uppercase", textAlign: "center" }} fontWeight={700} fontSize={35}>
           Create a task
         </Typography>
 
