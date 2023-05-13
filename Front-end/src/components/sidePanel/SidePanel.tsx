@@ -5,14 +5,17 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import { Button, Box } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { EditTaskContext } from "../../context/EditTaskContext";
+import EditPanel from "../editPanel/EditPanel";
 
-type Anchor = "top" | "right";
+type Anchor = "top" | "right" | "bottom" | "left";
 
 const SidePanel: FC = (): ReactElement => {
   const editTaskContext = useContext(EditTaskContext);
   const [state, setState] = React.useState({
-    top: editTaskContext.isOpen,
+    top: false,
     right: false,
+    bottom: false,
+    left: editTaskContext.isOpen,
   });
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -23,12 +26,12 @@ const SidePanel: FC = (): ReactElement => {
     ) {
       return;
     }
-    if (anchor === "top") editTaskContext.toggleIsOpen();
+    if (anchor === "left") editTaskContext.toggleIsOpen();
     setState({ ...state, [anchor]: open });
   };
 
   useEffect(() => {
-    setState({ ...state, top: editTaskContext.isOpen });
+    setState({ ...state, left: editTaskContext.isOpen });
   }, [editTaskContext.isOpen]);
 
   return (
@@ -41,24 +44,38 @@ const SidePanel: FC = (): ReactElement => {
       }}
     >
       <Profile name="Bella Song" email="email@email.com" />
-      {(["right", "top"] as const).map((anchor) => (
+      {(["right", "top", "bottom", "left"] as const).map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)} variant="contained" sx={{ marginTop: "15px" }}>
-            {anchor === "right" && "Create a Task"}
-            {anchor === "top" && "Task Review"}
-          </Button>
+          {anchor !== "left" && (
+            <Button onClick={toggleDrawer(anchor, true)} variant="contained" sx={{ marginTop: "15px" }}>
+              {anchor === "right" && "Create a Task"}
+              {anchor === "bottom" && "bottom"}
+              {anchor === "top" && "top"}
+            </Button>
+          )}
           <SwipeableDrawer
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
             onOpen={toggleDrawer(anchor, true)}
             PaperProps={{
-              sx: { width: anchor === "right" ? "50%" : "100%", height: anchor === "top" ? "90%" : "100%" },
+              sx: {
+                width:
+                  anchor !== "right" && anchor !== "left"
+                    ? "100%"
+                    : anchor === "right"
+                    ? "50%"
+                    : anchor === "left"
+                    ? "80%"
+                    : "100%",
+                height: anchor === "top" || anchor === "bottom" ? "90%" : "100%",
+              },
             }}
           >
-            <Box marginX={5} marginY="auto">
+            <Box marginX={5}>
               {anchor === "right" && <CreateTaskForm />}
               {anchor === "top" && <></>}
+              {anchor === "left" && <EditPanel />}
             </Box>
           </SwipeableDrawer>
         </React.Fragment>

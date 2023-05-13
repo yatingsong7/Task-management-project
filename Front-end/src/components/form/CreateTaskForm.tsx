@@ -49,7 +49,7 @@ const CreateTaskForm: FC = (): ReactElement => {
   }, [showSuccess]);
 
   return (
-    <Box my={4}>
+    <Box my={20}>
       <Stack spacing={3}>
         <Typography sx={{ textTransform: "uppercase", textAlign: "center" }} fontWeight={700} fontSize={35}>
           Create a task

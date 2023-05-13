@@ -20,6 +20,7 @@ const TasksArea: FC = (): ReactElement => {
 
   const taskContext = useContext(TaskContext);
   const editTaskContext = useContext(EditTaskContext);
+  const [editError, setEditError] = useState<string>("");
 
   useEffect(() => {
     refetch();
@@ -63,7 +64,13 @@ const TasksArea: FC = (): ReactElement => {
   };
 
   const handleManageTask = (id: number) => {
-    editTaskContext.toggleIsOpen();
+    const task = data?.find((d: ITaskApi) => d.id === id);
+    if (task) {
+      editTaskContext.setTask(task);
+      editTaskContext.toggleIsOpen();
+    } else {
+      setEditError("There was an error fetching the task");
+    }
   };
 
   return (
@@ -72,6 +79,7 @@ const TasksArea: FC = (): ReactElement => {
         <>
           <h2 style={{ marginBottom: "30px" }}>Status Of Tasks As On {format(new Date(), "PPPP")}</h2>
           {error && <Alert severity="error">There was an error fetching your tasks</Alert>}
+          {editError && <Alert severity="error">{editError}</Alert>}
 
           {!error && (
             <>
