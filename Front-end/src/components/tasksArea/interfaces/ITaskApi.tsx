@@ -8,10 +8,18 @@ export interface ITaskApi {
   date: Date;
   status: STATUS;
   priority: PRIORITY;
+  notes: INote[];
 }
 
 export interface IFilterGroup {
   filterResults: ITaskApi[] | undefined;
   data: ITaskApi[] | undefined;
   setFilterResults: React.Dispatch<React.SetStateAction<ITaskApi[] | undefined>> | undefined;
+}
+
+export interface INote {
+  id: number;
+  taskId: number;
+  content: string;
+  date: Date;
 }
