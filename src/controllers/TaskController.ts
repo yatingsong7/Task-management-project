@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../index";
-import { Task } from "../entities/Task";
+import Task from "../entities/Task";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator/src/validation-result";
 
@@ -7,8 +7,25 @@ class TaskController {
   public async getAll(req: Request, res: Response): Promise<Response> {
     try {
       let allTasks = await AppDataSource.getRepository(Task).find({
+        relations: ["notes"],
         order: {
-          date: "ASC",
+          date: "desc",
+        },
+      });
+      return res.status(200).send(allTasks);
+    } catch (e) {
+      return res.status(500).send(e);
+    }
+  }
+
+  public async getOne(req: Request, res: Response): Promise<Response> {
+    try {
+      let allTasks = await AppDataSource.getRepository(Task).findOne({
+        where: { id: Number(req.params.id) },
+        relations: ["notes"],
+        order: {
+          date: "desc",
+          notes: { date: "desc" },
         },
       });
       return res.status(200).send(allTasks);
