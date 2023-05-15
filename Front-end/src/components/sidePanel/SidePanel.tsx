@@ -4,18 +4,19 @@ import CreateTaskForm from "../form/CreateTaskForm";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { Button, Box } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import { EditTaskContext } from "../../context/EditTaskContext";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
 import EditPanel from "../editPanel/EditPanel";
+import CompareTaskPanel from "../compareTasksPanel/CompareTaskPanel";
 
 type Anchor = "top" | "right" | "bottom" | "left";
 
 const SidePanel: FC = (): ReactElement => {
-  const editTaskContext = useContext(EditTaskContext);
+  const viewTaskContext = useContext(ViewTaskContext);
   const [state, setState] = React.useState({
     top: false,
     right: false,
     bottom: false,
-    left: editTaskContext.isOpen,
+    left: viewTaskContext.isOpen,
   });
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -26,13 +27,13 @@ const SidePanel: FC = (): ReactElement => {
     ) {
       return;
     }
-    if (anchor === "left") editTaskContext.toggleIsOpen();
+    if (anchor === "left") viewTaskContext.toggleIsOpen();
     setState({ ...state, [anchor]: open });
   };
 
   useEffect(() => {
-    setState({ ...state, left: editTaskContext.isOpen });
-  }, [editTaskContext.isOpen]);
+    setState({ ...state, left: viewTaskContext.isOpen });
+  }, [viewTaskContext.isOpen]);
 
   return (
     <Grid2
@@ -76,6 +77,7 @@ const SidePanel: FC = (): ReactElement => {
               {anchor === "right" && <CreateTaskForm />}
               {anchor === "top" && <></>}
               {anchor === "left" && <EditPanel />}
+              {anchor === "bottom" && <CompareTaskPanel />}
             </Box>
           </SwipeableDrawer>
         </React.Fragment>

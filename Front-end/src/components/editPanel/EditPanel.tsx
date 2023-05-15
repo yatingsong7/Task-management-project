@@ -1,5 +1,5 @@
 import { FC, ReactElement, useContext, useRef, useState, useEffect } from "react";
-import { EditTaskContext } from "../../context/EditTaskContext";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
 import { Box, Button, Typography } from "@mui/material";
 import TextArea from "../form/_TextArea";
 import DoneIcon from "@mui/icons-material/Done";
@@ -9,10 +9,10 @@ import { TaskContext } from "../../context/TaskContext";
 import EditIcon from "@mui/icons-material/Edit";
 
 const EditPanel: FC = (): ReactElement => {
-  const editTaskContext = useContext(EditTaskContext);
+  const viewTaskContext = useContext(ViewTaskContext);
   const taskContext = useContext(TaskContext);
   const [editDescription, setEditDescription] = useState<boolean>(false);
-  const [description, setDescription] = useState<string | undefined>(editTaskContext.task.description);
+  const [description, setDescription] = useState<string | undefined>(viewTaskContext.task.description);
   const ref = useRef<HTMLDivElement>(null);
 
   const openDescriptionBox = () => {
@@ -36,10 +36,10 @@ const EditPanel: FC = (): ReactElement => {
   const saveEdit = async () => {
     if (description) {
       try {
-        const response: any = await api("/tasks/" + editTaskContext.task.id, "PUT", { description: description });
+        const response: any = await api("/tasks/" + viewTaskContext.task.id, "PUT", { description: description });
         if (response.affected !== 0) {
           taskContext.toggle();
-          editTaskContext.task.description = description;
+          viewTaskContext.task.description = description;
         }
       } catch (err) {
         console.log(err);
@@ -53,7 +53,7 @@ const EditPanel: FC = (): ReactElement => {
     <Box display="flex" flexDirection="row" marginTop={2}>
       <Box marginRight={2} width="1000px">
         <Typography variant="h4" fontWeight={700} mt={2}>
-          {editTaskContext.task.title}
+          {viewTaskContext.task.title}
         </Typography>
         <Typography variant="h5" mt={2}>
           <b>
@@ -62,7 +62,7 @@ const EditPanel: FC = (): ReactElement => {
         </Typography>
         {!editDescription && (
           <Typography variant="h6" m={2} mt={1}>
-            {editTaskContext.task.description}
+            {viewTaskContext.task.description}
           </Typography>
         )}
         {editDescription && (
@@ -71,7 +71,7 @@ const EditPanel: FC = (): ReactElement => {
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-              defaultContent={editTaskContext.task.description}
+              defaultContent={viewTaskContext.task.description}
             />
             <DoneIcon
               fontSize="large"
@@ -82,15 +82,15 @@ const EditPanel: FC = (): ReactElement => {
         )}
         <Typography variant="h5" mt={2}>
           <b>Due Date: </b>
-          {editTaskContext.task.date && format(new Date(editTaskContext.task.date), "dd MMM yyyy")}{" "}
+          {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}{" "}
         </Typography>
         <Typography variant="h5" mt={2}>
           <b>Status: </b>
-          {editTaskContext.task.status}
+          {viewTaskContext.task.status}
         </Typography>
         <Typography variant="h5" mt={2}>
           <b>Priority: </b>
-          {editTaskContext.task.priority}
+          {viewTaskContext.task.priority}
         </Typography>
         <Typography variant="h5" mt={2}>
           <b>Pre-requisite tasks: </b>
@@ -105,17 +105,6 @@ const EditPanel: FC = (): ReactElement => {
           {/* {editTaskContext.task.priority} */}
         </Typography>
       </Box>
-      {/* <Box width="200px" marginTop={2}>
-        <Button variant="contained" fullWidth onClick={openDescriptionBox}>
-          Add Description
-        </Button>
-        <Button variant="contained" fullWidth sx={{ marginTop: "10px" }}>
-          Add Notes
-        </Button>
-        <Button variant="contained" fullWidth sx={{ marginTop: "10px" }}>
-          Add to-do list
-        </Button>
-      </Box> */}
     </Box>
   );
 };

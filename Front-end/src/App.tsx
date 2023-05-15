@@ -10,7 +10,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TaskContextProvider } from "./context/TaskContext";
-import { EditTaskContextProvider } from "./context/EditTaskContext";
+import { ViewTaskContextProvider } from "./context/ViewTaskContext";
 
 const queryClient = new QueryClient();
 
@@ -20,9 +20,9 @@ const App: FC = (): ReactElement => {
       <ThemeProvider theme={customTheme}>
         <CssBaseline />
         <TaskContextProvider>
-          <EditTaskContextProvider>
+          <ViewTaskContextProvider>
             <Dashboard />
-          </EditTaskContextProvider>
+          </ViewTaskContextProvider>
         </TaskContextProvider>
       </ThemeProvider>
     </QueryClientProvider>

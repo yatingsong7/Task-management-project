@@ -10,7 +10,7 @@ import { ITaskApi } from "./interfaces/ITaskApi";
 import { STATUS } from "../form/enums/STATUS";
 import { TaskContext } from "../../context/TaskContext";
 import FilterGroup from "./_filterGroup";
-import { EditTaskContext } from "../../context/EditTaskContext";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
 
 const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
@@ -19,7 +19,7 @@ const TasksArea: FC = (): ReactElement => {
   const [filterResults, setFilterResults] = useState<Array<ITaskApi> | undefined>(undefined);
 
   const taskContext = useContext(TaskContext);
-  const editTaskContext = useContext(EditTaskContext);
+  const editTaskContext = useContext(ViewTaskContext);
   const [editError, setEditError] = useState<string>("");
 
   useEffect(() => {
