@@ -13,7 +13,7 @@ export const TaskRouter = (express: any) => {
 
   tRouter.post("/tasks", createValidator, taskController.create);
 
-  tRouter.put("/tasks", updateValidator, taskController.update);
+  tRouter.put("/tasks/:id", updateValidator, taskController.update);
 
   tRouter.delete("/tasks", taskController.remove);
 

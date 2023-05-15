@@ -56,7 +56,7 @@ const findColorForStatus = (status: STATUS) => {
   switch (status) {
     case STATUS.completed:
       return "#539165";
-    case STATUS.inProgress:
+    case STATUS.inprogress:
       return "#F2CD5C";
     case STATUS.todo:
       return "#DF2E38";

@@ -36,16 +36,14 @@ const TasksArea: FC = (): ReactElement => {
   };
 
   const handleMark = async (id: number) => {
-    const task = { id: id, status: STATUS.completed };
-    const response: any = await api("/tasks", "PUT", task);
+    const response: any = await api("/tasks/" + id, "PUT", { status: STATUS.completed });
     if (response.affected !== 0) {
       refetch();
     }
   };
 
   const handleSwitch = async (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const task = { id: id, status: e.target.checked ? STATUS.inProgress : STATUS.todo };
-    const response: any = await api("/tasks", "PUT", task);
+    const response: any = await api("/tasks/" + id, "PUT", { status: e.target.checked ? STATUS.inprogress : STATUS.todo });
     if (response.affected !== 0) {
       refetch();
     }
@@ -85,7 +83,7 @@ const TasksArea: FC = (): ReactElement => {
             <>
               <Progress
                 todoCount={countTasks(STATUS.todo)}
-                inProgressCount={countTasks(STATUS.inProgress)}
+                inProgressCount={countTasks(STATUS.inprogress)}
                 completeCount={countTasks(STATUS.completed)}
                 handleFilter={handleFilterByStatus}
               />
@@ -103,7 +101,7 @@ const TasksArea: FC = (): ReactElement => {
                         taskBody={d.description}
                         status={d.status}
                         key={i}
-                        inProgress={d.status === STATUS.inProgress ? true : false}
+                        inProgress={d.status === STATUS.inprogress ? true : false}
                         handleMark={handleMark}
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}
@@ -122,7 +120,7 @@ const TasksArea: FC = (): ReactElement => {
                         taskBody={d.description}
                         status={d.status}
                         key={i}
-                        inProgress={d.status === STATUS.inProgress ? true : false}
+                        inProgress={d.status === STATUS.inprogress ? true : false}
                         handleMark={handleMark}
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}

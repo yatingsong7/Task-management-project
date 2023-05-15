@@ -36,7 +36,7 @@ const FilterGroup: FC<IFilterGroup> = (props: any): ReactElement => {
 
     setFilterResults(filterData);
   };
-  console.log(filterResults);
+
   return (
     <>
       <Box marginX={4} display="flex" flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
@@ -76,7 +76,7 @@ const FilterGroup: FC<IFilterGroup> = (props: any): ReactElement => {
               options={[
                 { label: "None", value: "" },
                 { label: STATUS.todo.toUpperCase(), value: STATUS.todo },
-                { label: STATUS.inProgress.toUpperCase(), value: STATUS.inProgress },
+                { label: STATUS.inprogress.toUpperCase(), value: STATUS.inprogress },
                 { label: STATUS.completed.toUpperCase(), value: STATUS.completed },
               ]}
               onChange={(e) => setFilterByStatus(e.target.value as STATUS)}

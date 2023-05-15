@@ -42,14 +42,15 @@ class TaskController {
 
     const taskRepo = AppDataSource.getRepository(Task);
 
-    const data = await taskRepo.findOne({ where: { id: req.body.id } });
+    const data = await taskRepo.findOne({ where: { id: Number(req.params.id) } });
 
     if (!data) {
       return res.status(400).send("Not find the task");
     }
+    req.body = { ...data, ...req.body };
 
     try {
-      const result = await taskRepo.update(req.body.id, { status: req.body.status });
+      const result = await taskRepo.update(Number(req.params.id), req.body);
       return res.status(200).send(result);
     } catch (e) {
       return res.status(500).send(e);

@@ -69,7 +69,7 @@ const CreateTaskForm: FC = (): ReactElement => {
             value={status}
             options={[
               { label: STATUS.todo.toUpperCase(), value: STATUS.todo },
-              { label: STATUS.inProgress.toUpperCase(), value: STATUS.inProgress },
+              { label: STATUS.inprogress.toUpperCase(), value: STATUS.inprogress },
               { label: STATUS.completed.toUpperCase(), value: STATUS.completed },
             ]}
             onChange={(e) => setStatus(e.target.value as STATUS)}
