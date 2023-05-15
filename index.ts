@@ -1,9 +1,12 @@
-import { Task } from "./src/entities/Task";
+import Task from "./src/entities/Task";
 import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { TaskRouter } from "./src/routes/TaskRoute";
+import { Todo } from "./src/entities/Todo";
+import Note from "./src/entities/Note";
+import { NoteRouter } from "./src/routes/NoteRoute";
 
 //Instantiate express app
 const app: Express = express();
@@ -23,14 +26,16 @@ export const AppDataSource = new DataSource({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DB,
   synchronize: true, //Since it's a small project, it's ok to set it to true
-  entities: [Task],
+  entities: [Task, Todo, Note],
 });
 
 // define server port
 const port = process.env.PORT;
 
 const routes = TaskRouter(express);
+const noteRoutes = NoteRouter(express);
 app.use("/", routes);
+app.use("/", noteRoutes);
 
 // Once DB is connected, start listening to the requests on the default port
 AppDataSource.initialize()

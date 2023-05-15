@@ -9,6 +9,8 @@ export const TaskRouter = (express: any) => {
     res.send("Server starts on 3200 and DB starts on 3307");
   });
 
+  tRouter.get("/tasks/:id", taskController.getOne);
+
   tRouter.get("/tasks", taskController.getAll);
 
   tRouter.post("/tasks", createValidator, taskController.create);
