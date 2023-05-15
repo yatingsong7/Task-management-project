@@ -55,9 +55,9 @@ const CreateTaskForm: FC = (): ReactElement => {
           Create a task
         </Typography>
 
-        <TextInput onChange={(e) => setTitle(e.target.value)} />
+        <TextInput label="Task Title" onChange={(e) => setTitle(e.target.value)} value={title} />
 
-        <TextArea onChange={(e) => setDesc(e.target.value)} />
+        <TextArea label="Description" onChange={(e) => setDesc(e.target.value)} />
 
         <DateInput onChange={(date) => setDate(date)} value={date} />
 

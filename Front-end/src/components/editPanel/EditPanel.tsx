@@ -1,18 +1,20 @@
 import { FC, ReactElement, useContext, useRef, useState, useEffect } from "react";
 import { ViewTaskContext } from "../../context/ViewTaskContext";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import TextArea from "../form/_TextArea";
 import DoneIcon from "@mui/icons-material/Done";
 import { format } from "date-fns";
 import { api } from "../../utilities/api";
 import { TaskContext } from "../../context/TaskContext";
 import EditIcon from "@mui/icons-material/Edit";
+import TextInput from "../form/_TextInput";
 
 const EditPanel: FC = (): ReactElement => {
   const viewTaskContext = useContext(ViewTaskContext);
   const taskContext = useContext(TaskContext);
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useState<string | undefined>(viewTaskContext.task.description);
+  const [note, setNote] = useState<string | undefined>();
   const ref = useRef<HTMLDivElement>(null);
 
   const openDescriptionBox = () => {
@@ -49,12 +51,50 @@ const EditPanel: FC = (): ReactElement => {
     }
   };
 
+  const addNote = async () => {
+    if (note) {
+      try {
+        const response: any = await api("/tasks/" + viewTaskContext.task.id + "/notes", "POST", { content: note });
+
+        if (response.affected !== 0) {
+          viewTaskContext.refresh(viewTaskContext.task.id);
+          setNote("");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const deleteNote = async (id: number) => {
+    try {
+      const response: any = await api("/tasks/" + viewTaskContext.task.id + "/notes/" + id, "DELETE");
+      if (response.affected !== 0) {
+        viewTaskContext.refresh(viewTaskContext.task.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="row" marginTop={2}>
       <Box marginRight={2} width="1000px">
-        <Typography variant="h4" fontWeight={700} mt={2}>
+        <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">
           {viewTaskContext.task.title}
         </Typography>
+        <Typography variant="h5" mt={4}>
+          <b>Due Date: </b>
+          {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}
+        </Typography>
+        <Typography variant="h5" mt={2}>
+          <b>Status: </b>
+          {viewTaskContext.task.status}
+        </Typography>
+        <Typography variant="h5" mt={2}>
+          <b>Priority: </b>
+          {viewTaskContext.task.priority}
+        </Typography>{" "}
         <Typography variant="h5" mt={2}>
           <b>
             Description: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={openDescriptionBox} />
@@ -68,6 +108,7 @@ const EditPanel: FC = (): ReactElement => {
         {editDescription && (
           <div style={{ position: "relative", marginTop: "15px", marginRight: "10px" }} ref={ref}>
             <TextArea
+              label=""
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
@@ -80,30 +121,59 @@ const EditPanel: FC = (): ReactElement => {
             />
           </div>
         )}
-        <Typography variant="h5" mt={2}>
-          <b>Due Date: </b>
-          {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}{" "}
-        </Typography>
-        <Typography variant="h5" mt={2}>
-          <b>Status: </b>
-          {viewTaskContext.task.status}
-        </Typography>
-        <Typography variant="h5" mt={2}>
-          <b>Priority: </b>
-          {viewTaskContext.task.priority}
-        </Typography>
-        <Typography variant="h5" mt={2}>
-          <b>Pre-requisite tasks: </b>
+        <Typography variant="h5" mt={4}>
+          <b>
+            Pre-requisite tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={openDescriptionBox} />
+          </b>
           {/* {editTaskContext.task.priority} */}
         </Typography>
-        <Typography variant="h5" mt={2}>
+        <Typography variant="h5" mt={4}>
           <b>To do list: </b>
           {/* {editTaskContext.task.priority} */}
         </Typography>
-        <Typography variant="h5" mt={2}>
-          <b>Notes: </b>
-          {/* {editTaskContext.task.priority} */}
-        </Typography>
+        <Box mt={4}>
+          <Typography variant="h5">
+            <b>Notes: </b>
+          </Typography>
+          <div style={{ position: "relative" }}>
+            <TextInput
+              label=""
+              value={note}
+              onChange={(e) => {
+                setNote(e.target.value);
+              }}
+            />
+            <EditIcon sx={{ position: "absolute", right: "10px", bottom: "16px", cursor: "pointer" }} onClick={addNote} />
+          </div>
+          <Box>
+            {viewTaskContext.task.notes &&
+              viewTaskContext.task.notes.map((m, i) => {
+                return (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    paddingX={2}
+                    paddingY={1}
+                    marginY={1}
+                    borderRadius={1}
+                    sx={{ backgroundColor: "#5C469C" }}
+                    key={i}
+                  >
+                    <Typography fontSize={18}>{m.content}</Typography>
+                    <small style={{ alignSelf: "end", fontStyle: "italic" }}>
+                      {format(new Date(m.date), " dd MMM yyyy - HH:mm:ss")}
+                      <span
+                        style={{ marginLeft: "15px", textDecoration: "underline", cursor: "pointer" }}
+                        onClick={() => deleteNote(m.id)}
+                      >
+                        Delete
+                      </span>
+                    </small>
+                  </Box>
+                );
+              })}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

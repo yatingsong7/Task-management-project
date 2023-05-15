@@ -67,7 +67,7 @@ const SidePanel: FC = (): ReactElement => {
                     : anchor === "right"
                     ? "50%"
                     : anchor === "left"
-                    ? "80%"
+                    ? "60%"
                     : "100%",
                 height: anchor === "top" || anchor === "bottom" ? "90%" : "100%",
               },

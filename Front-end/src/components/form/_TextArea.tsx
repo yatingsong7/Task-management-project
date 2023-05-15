@@ -4,12 +4,12 @@ import { IInputField } from "./interfaces/IInputField";
 import PropTypes from "prop-types";
 
 const TextArea: FC<IInputField> = (props): ReactElement => {
-  const { onChange = (e) => console.log(e.target.value), defaultContent = "" } = props;
+  const { label = "", onChange = (e) => console.log(e.target.value), defaultContent = "" } = props;
 
   return (
     <TextField
-      id="Task Description"
-      label="Task Description"
+      id={label}
+      label={label}
       variant="outlined"
       defaultValue={defaultContent && defaultContent}
       sx={{

@@ -4,12 +4,13 @@ import { IInputField } from "./interfaces/IInputField";
 import PropTypes from "prop-types";
 
 const TextInput: FC<IInputField> = (props): ReactElement => {
-  const { onChange = (e) => console.log(e.target.value) } = props;
+  const { label = "", onChange = (e) => console.log(e.target.value), value = "" } = props;
   return (
     <TextField
-      id="Task Title"
-      label="Task Title"
+      id={label}
+      label={label}
       variant="outlined"
+      value={value}
       sx={{
         "& label": { color: "text.primary" },
         "& label.Mui-focused": { color: "primary.main" },
