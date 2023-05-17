@@ -7,7 +7,7 @@ import { IToDoInput } from "./interface/IToDoInput";
 const ToDoInput: FC<IToDoInput> = (props): ReactElement => {
   const { handleSave } = props;
   const [todo, setTodo] = useState<string | undefined>();
-  const [selectInput, setSelectInput] = useState<number | undefined>();
+  const [selectInput, setSelectInput] = useState<number>(0);
 
   return (
     <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
@@ -31,13 +31,13 @@ const ToDoInput: FC<IToDoInput> = (props): ReactElement => {
         }}
         select
         size="small"
-        onChange={(e) => setSelectInput(e.target.value !== "-" ? Number(e.target.value) : 0)}
+        onChange={(e) => setSelectInput(Number(e.target.value))}
         value={selectInput}
       >
-        {["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((o) => {
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((o) => {
           return (
             <MenuItem key={o} value={o} sx={{ backgroundColor: "#EBB02D", fontWeight: "bold" }}>
-              {o}
+              {o === 0 ? "-" : o}
             </MenuItem>
           );
         })}

@@ -1,9 +1,9 @@
-import { Box, FormControlLabel, Switch, Button } from "@mui/material";
-import React, { FC, ReactElement } from "react";
-import { IFooter } from "./interfaces/IFooter";
-import PropTypes from "prop-types";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, FormControlLabel, Switch } from "@mui/material";
+import PropTypes from "prop-types";
+import { FC, ReactElement } from "react";
+import { IFooter } from "./interfaces/IFooter";
 
 const TaskFooter: FC<IFooter> = (props): ReactElement => {
   const {
@@ -25,7 +25,6 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
             onChange={(e) => {
               handleSwitch(e, id);
             }}
-            defaultChecked={inProgress}
             checked={inProgress}
           />
         }
