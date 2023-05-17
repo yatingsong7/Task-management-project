@@ -219,7 +219,7 @@ const EditPanel: FC = (): ReactElement => {
         )}
         <Typography variant="h5" mt={4}>
           <b>
-            Pre-requisite tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
+            Related tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
           </b>
         </Typography>
         <Typography variant="h5" mt={4}>

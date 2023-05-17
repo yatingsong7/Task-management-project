@@ -1,14 +1,16 @@
 import { Box } from "@mui/material";
-import React, { FC, ReactElement } from "react";
+import PropTypes from "prop-types";
+import { FC, ReactElement, useContext } from "react";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
+import { PRIORITY } from "../form/enums/PRIORITY";
+import { STATUS } from "../form/enums/STATUS";
 import TaskBody from "./_TaskBody";
 import TaskFooter from "./_TaskFooter";
 import TaskHeader from "./_TaskHeader";
 import { ITask } from "./interfaces/ITask";
-import { PRIORITY } from "../form/enums/PRIORITY";
-import PropTypes from "prop-types";
-import { STATUS } from "../form/enums/STATUS";
 
 const Task: FC<ITask> = (props): ReactElement => {
+  const editTaskContext = useContext(ViewTaskContext);
   const {
     id = 0,
     title = "Please set up a task",
@@ -20,10 +22,22 @@ const Task: FC<ITask> = (props): ReactElement => {
     handleMark,
     handleSwitch,
     handleDelete,
-    handleManageTask,
+    handleManageTask = () => {},
+    handleOpenEditPanel = () => {},
   } = props;
   return (
-    <Box border={"2px solid"} borderRadius="5px" p={2} m={4} sx={{ borderColor: findColorForStatus(status) }}>
+    <Box
+      border={"2px solid"}
+      borderRadius="5px"
+      p={2}
+      m={4}
+      sx={{
+        borderColor: "#F2CD5C",
+        cursor: "pointer",
+        backgroundColor: id === editTaskContext.task.id ? "#624F82" : null,
+      }}
+      onClick={() => handleManageTask(id)}
+    >
       <TaskHeader title={title} date={date} priority={priority} />
       <TaskBody taskBody={taskBody} />
       <TaskFooter
@@ -32,7 +46,7 @@ const Task: FC<ITask> = (props): ReactElement => {
         handleSwitch={handleSwitch}
         handleMark={handleMark}
         handleDelete={handleDelete}
-        handleManageTask={handleManageTask}
+        handleOpenEditPanel={handleOpenEditPanel}
         id={id}
       />
     </Box>
@@ -50,17 +64,4 @@ Task.propTypes = {
   handleMark: PropTypes.func,
   handleSwitch: PropTypes.func,
   handleDelete: PropTypes.func,
-};
-
-const findColorForStatus = (status: STATUS) => {
-  switch (status) {
-    case STATUS.completed:
-      return "#539165";
-    case STATUS.inprogress:
-      return "#F2CD5C";
-    case STATUS.todo:
-      return "#DF2E38";
-    default:
-      return "#fff";
-  }
 };

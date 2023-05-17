@@ -12,7 +12,7 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
     handleSwitch = () => console.log(),
     handleMark = () => console.log(),
     handleDelete = () => console.log(),
-    handleManageTask = () => console.log(),
+    handleOpenEditPanel = () => console.log(),
     id,
   } = props;
   return (
@@ -34,7 +34,7 @@ const TaskFooter: FC<IFooter> = (props): ReactElement => {
         <EditIcon
           sx={{ marginRight: "15px", cursor: "pointer" }}
           onClick={() => {
-            handleManageTask(id);
+            handleOpenEditPanel(id);
           }}
         />
         <DeleteForeverIcon

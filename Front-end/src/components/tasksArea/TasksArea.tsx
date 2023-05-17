@@ -1,16 +1,16 @@
-import Grid2 from "@mui/material/Unstable_Grid2";
-import React, { FC, ReactElement, useContext, useEffect, useState } from "react";
 import { Alert, Box, LinearProgress } from "@mui/material";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import React, { FC, ReactElement, useContext, useEffect, useState } from "react";
+import { TaskContext } from "../../context/TaskContext";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
+import { api } from "../../utilities/api";
+import { STATUS } from "../form/enums/STATUS";
 import Progress from "../progress/Progress";
 import Task from "../task/Task";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../utilities/api";
-import { ITaskApi } from "./interfaces/ITaskApi";
-import { STATUS } from "../form/enums/STATUS";
-import { TaskContext } from "../../context/TaskContext";
 import FilterGroup from "./_filterGroup";
-import { ViewTaskContext } from "../../context/ViewTaskContext";
+import { ITaskApi } from "./interfaces/ITaskApi";
 
 const TasksArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(["tasks"], async () => {
@@ -43,7 +43,9 @@ const TasksArea: FC = (): ReactElement => {
   };
 
   const handleSwitch = async (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const response: any = await api("/tasks/" + id, "PUT", { status: e.target.checked ? STATUS.inprogress : STATUS.todo });
+    const response: any = await api("/tasks/" + id, "PUT", {
+      status: e.target.checked ? STATUS.inprogress : STATUS.todo,
+    });
     if (response.affected !== 0) {
       refetch();
     }
@@ -61,13 +63,18 @@ const TasksArea: FC = (): ReactElement => {
     setFilterResults(filterData);
   };
 
+  const handleOpenEditPanel = (id: number) => {
+    if (handleManageTask(id)) editTaskContext.toggleIsOpen();
+  };
+
   const handleManageTask = (id: number) => {
     const task = data?.find((d: ITaskApi) => d.id === id);
     if (task) {
       editTaskContext.setTask(task);
-      editTaskContext.toggleIsOpen();
+      return true;
     } else {
       setEditError("There was an error fetching the task");
+      return false;
     }
   };
 
@@ -106,6 +113,7 @@ const TasksArea: FC = (): ReactElement => {
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}
                         handleManageTask={handleManageTask}
+                        handleOpenEditPanel={handleOpenEditPanel}
                       />
                     );
                   })
@@ -125,6 +133,7 @@ const TasksArea: FC = (): ReactElement => {
                         handleSwitch={handleSwitch}
                         handleDelete={handleDelete}
                         handleManageTask={handleManageTask}
+                        handleOpenEditPanel={handleOpenEditPanel}
                       />
                     );
                   })
