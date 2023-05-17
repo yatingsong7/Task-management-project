@@ -10,6 +10,7 @@ export interface ITaskApi {
   priority: PRIORITY;
   notes: INote[];
   todos: ITodo[];
+  preTasks: number[];
 }
 
 export interface IFilterGroup {

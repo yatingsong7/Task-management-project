@@ -24,20 +24,20 @@ export default class Task {
   @Column()
   priority: PRIORITY;
 
-  @OneToMany(() => Todo, (e) => e.task)
+  @OneToMany(() => Todo, (e) => e.task, { eager: true })
   todos: Todo[];
 
   @OneToMany(() => Note, (e) => e.task)
   notes: Note[];
 
-  @ManyToMany(() => Task, (e) => e.preTask)
+  @ManyToMany(() => Task, (e) => e.preTasks)
   @JoinTable({
-    name: "prerequisite_task_assign",
+    name: "related_task_assign",
     joinColumn: { name: "preTaskId", referencedColumnName: "id" },
     inverseJoinColumn: { name: "mainTaskId", referencedColumnName: "id" },
   })
   mainTasks?: Task[];
 
   @ManyToMany(() => Task, (e) => e.mainTasks)
-  preTask?: Task[];
+  preTasks?: Task[];
 }

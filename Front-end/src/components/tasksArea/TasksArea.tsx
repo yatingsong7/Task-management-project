@@ -64,18 +64,12 @@ const TasksArea: FC = (): ReactElement => {
   };
 
   const handleOpenEditPanel = (id: number) => {
-    if (handleManageTask(id)) editTaskContext.toggleIsOpen();
+    handleManageTask(id);
+    editTaskContext.toggleIsOpen();
   };
 
   const handleManageTask = (id: number) => {
-    const task = data?.find((d: ITaskApi) => d.id === id);
-    if (task) {
-      editTaskContext.setTask(task);
-      return true;
-    } else {
-      setEditError("There was an error fetching the task");
-      return false;
-    }
+    editTaskContext.refresh(id);
   };
 
   return (
