@@ -1,12 +1,12 @@
-import React, { FC, ReactElement, useContext, useEffect } from "react";
-import Profile from "../profile/Profile";
-import CreateTaskForm from "../form/CreateTaskForm";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import { Button, Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import React, { FC, ReactElement, useContext, useEffect } from "react";
 import { ViewTaskContext } from "../../context/ViewTaskContext";
-import EditPanel from "../editPanel/EditPanel";
 import CompareTaskPanel from "../compareTasksPanel/CompareTaskPanel";
+import EditPanel from "../editPanel/EditPanel";
+import CreateTaskForm from "../form/CreateTaskForm";
+import Profile from "../profile/Profile";
 
 type Anchor = "top" | "right" | "bottom" | "left";
 
@@ -50,8 +50,8 @@ const SidePanel: FC = (): ReactElement => {
           {anchor !== "left" && (
             <Button onClick={toggleDrawer(anchor, true)} variant="contained" sx={{ marginTop: "15px" }}>
               {anchor === "right" && "Create a Task"}
-              {anchor === "bottom" && "bottom"}
-              {anchor === "top" && "top"}
+              {anchor === "bottom" && "View Task"}
+              {anchor === "top" && "Generate To Do"}
             </Button>
           )}
           <SwipeableDrawer
