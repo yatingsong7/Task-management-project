@@ -9,6 +9,7 @@ export interface ITaskApi {
   status: STATUS;
   priority: PRIORITY;
   notes: INote[];
+  todos: ITodo[];
 }
 
 export interface IFilterGroup {
@@ -22,4 +23,12 @@ export interface INote {
   taskId: number;
   content: string;
   date: Date;
+}
+
+export interface ITodo {
+  id: number;
+  taskId: number;
+  title: string;
+  position: number;
+  checked: number;
 }

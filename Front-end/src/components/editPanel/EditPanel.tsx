@@ -1,6 +1,6 @@
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { FC, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { TaskContext } from "../../context/TaskContext";
@@ -16,7 +16,10 @@ const EditPanel: FC = (): ReactElement => {
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useState<string | undefined>(viewTaskContext.task.description);
   const [note, setNote] = useState<string | undefined>();
+  const [editTodo, setEditTodo] = useState<boolean>(false);
+  const [addTodo, setAddTodo] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
+  const todoRef = useRef<HTMLDivElement>(null);
 
   const openDescriptionBox = () => {
     setEditDescription(true);
@@ -27,6 +30,9 @@ const EditPanel: FC = (): ReactElement => {
       if (editDescription && ref.current && !ref.current.contains(e.target as HTMLElement)) {
         setEditDescription(false);
       }
+      if (addTodo && todoRef.current && !todoRef.current.contains(e.target as HTMLElement)) {
+        setAddTodo(false);
+      }
     };
 
     document.addEventListener("mousedown", checkIfClickedOutside);
@@ -34,7 +40,7 @@ const EditPanel: FC = (): ReactElement => {
     return () => {
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
-  }, [editDescription]);
+  }, [editDescription, addTodo]);
 
   const saveEdit = async () => {
     if (description) {
@@ -95,6 +101,31 @@ const EditPanel: FC = (): ReactElement => {
     }
   };
 
+  const handleCheckTodo = async (checked: boolean, todoId: number) => {
+    try {
+      const response: any = await api("/tasks/" + viewTaskContext.task.id + "/todos/" + todoId, "PUT", {
+        checked: checked ? 1 : 0,
+      });
+
+      if (response.affected !== 0) {
+        viewTaskContext.refresh(viewTaskContext.task.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteTodo = async (todoId: number) => {
+    try {
+      const response: any = await api("/tasks/" + viewTaskContext.task.id + "/todos/" + todoId, "DELETE");
+      if (response.affected !== 0) {
+        viewTaskContext.refresh(viewTaskContext.task.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="row" marginTop={2}>
       <Box marginRight={2} width="1000px">
@@ -146,7 +177,59 @@ const EditPanel: FC = (): ReactElement => {
         </Typography>
         <Typography variant="h5" mt={4}>
           <b>To do list: </b>
-          <ToDoInput handleSave={handleSaveToDo} />
+          <Box display="flex" flexDirection="column">
+            {viewTaskContext.task.todos &&
+              viewTaskContext.task.todos.map((t) => {
+                return (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    key={t.id}
+                    padding="1px"
+                    borderRadius={2}
+                    sx={{ "&:hover": { backgroundColor: "#5C469C" } }}
+                  >
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                      <Checkbox
+                        onChange={(e) => handleCheckTodo(e.target.checked, t.id)}
+                        checked={t.checked === 0 ? false : true}
+                      />
+                      <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
+                        {t.position !== 0 && t.position + ". "}
+                      </Typography>
+                      <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
+                        {t.title}
+                      </Typography>
+                    </Box>
+
+                    <Typography
+                      style={{
+                        fontStyle: "italic",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                      }}
+                      onClick={() => handleDeleteTodo(t.id)}
+                    >
+                      Delete
+                    </Typography>
+                  </Box>
+                );
+              })}
+            {!addTodo && (
+              <Button variant="contained" sx={{ alignSelf: "end", marginTop: "5px" }} onClick={() => setAddTodo(true)}>
+                Add an item
+              </Button>
+            )}
+            {addTodo && (
+              <div ref={todoRef}>
+                <ToDoInput handleSave={handleSaveToDo} />
+              </div>
+            )}
+          </Box>
         </Typography>
         <Box mt={4}>
           <Typography variant="h5">

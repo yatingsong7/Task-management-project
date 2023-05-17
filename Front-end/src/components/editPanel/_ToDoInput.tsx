@@ -10,8 +10,7 @@ const ToDoInput: FC<IToDoInput> = (props): ReactElement => {
   const [selectInput, setSelectInput] = useState<number>(0);
 
   return (
-    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-      {/* <Checkbox onChange={(e)=>setCheck(e.target.checked)}/> */}
+    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" marginTop={1}>
       <TextInput
         label=""
         inputProps={{ style: { padding: 8 } }}
