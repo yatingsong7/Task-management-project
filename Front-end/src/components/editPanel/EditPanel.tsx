@@ -1,13 +1,14 @@
-import { FC, ReactElement, useContext, useRef, useState, useEffect } from "react";
-import { ViewTaskContext } from "../../context/ViewTaskContext";
-import { Box, Typography } from "@mui/material";
-import TextArea from "../form/_TextArea";
 import DoneIcon from "@mui/icons-material/Done";
-import { format } from "date-fns";
-import { api } from "../../utilities/api";
-import { TaskContext } from "../../context/TaskContext";
 import EditIcon from "@mui/icons-material/Edit";
+import { Box, Typography } from "@mui/material";
+import { format } from "date-fns";
+import { FC, ReactElement, useContext, useEffect, useRef, useState } from "react";
+import { TaskContext } from "../../context/TaskContext";
+import { ViewTaskContext } from "../../context/ViewTaskContext";
+import { api } from "../../utilities/api";
+import TextArea from "../form/_TextArea";
 import TextInput from "../form/_TextInput";
+import ToDoInput from "./_ToDoInput";
 
 const EditPanel: FC = (): ReactElement => {
   const viewTaskContext = useContext(ViewTaskContext);
@@ -77,6 +78,23 @@ const EditPanel: FC = (): ReactElement => {
     }
   };
 
+  const handleSaveToDo = async (todo: string, order: number | undefined) => {
+    if (todo) {
+      try {
+        const response: any = await api("/tasks/" + viewTaskContext.task.id + "/todos", "POST", {
+          title: todo,
+          position: order && order,
+        });
+
+        if (response.affected !== 0) {
+          viewTaskContext.refresh(viewTaskContext.task.id);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="row" marginTop={2}>
       <Box marginRight={2} width="1000px">
@@ -125,11 +143,10 @@ const EditPanel: FC = (): ReactElement => {
           <b>
             Pre-requisite tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={openDescriptionBox} />
           </b>
-          {/* {editTaskContext.task.priority} */}
         </Typography>
         <Typography variant="h5" mt={4}>
           <b>To do list: </b>
-          {/* {editTaskContext.task.priority} */}
+          <ToDoInput handleSave={handleSaveToDo} />
         </Typography>
         <Box mt={4}>
           <Typography variant="h5">
@@ -142,8 +159,12 @@ const EditPanel: FC = (): ReactElement => {
               onChange={(e) => {
                 setNote(e.target.value);
               }}
+              inputProps={{ style: { padding: 8 } }}
             />
-            <EditIcon sx={{ position: "absolute", right: "10px", bottom: "16px", cursor: "pointer" }} onClick={addNote} />
+            <EditIcon
+              sx={{ position: "absolute", right: "10px", bottom: "8px", cursor: "pointer" }}
+              onClick={addNote}
+            />
           </div>
           <Box>
             {viewTaskContext.task.notes &&

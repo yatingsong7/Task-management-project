@@ -3,4 +3,5 @@ export interface IInputField {
   defaultContent?: string;
   label: string;
   value?: string;
+  inputProps?: {};
 }
