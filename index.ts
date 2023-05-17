@@ -1,12 +1,13 @@
-import Task from "./src/entities/Task";
-import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import express, { Express } from "express";
 import { DataSource } from "typeorm";
-import { TaskRouter } from "./src/routes/TaskRoute";
-import { Todo } from "./src/entities/Todo";
 import Note from "./src/entities/Note";
+import Task from "./src/entities/Task";
+import { Todo } from "./src/entities/Todo";
 import { NoteRouter } from "./src/routes/NoteRoute";
+import { TaskRouter } from "./src/routes/TaskRoute";
+import { TodoRouter } from "./src/routes/TodoRoute";
 
 //Instantiate express app
 const app: Express = express();
@@ -34,8 +35,10 @@ const port = process.env.PORT;
 
 const routes = TaskRouter(express);
 const noteRoutes = NoteRouter(express);
+const todoRoutes = TodoRouter(express);
 app.use("/", routes);
 app.use("/", noteRoutes);
+app.use("/", todoRoutes);
 
 // Once DB is connected, start listening to the requests on the default port
 AppDataSource.initialize()
