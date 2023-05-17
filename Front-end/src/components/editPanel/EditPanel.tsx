@@ -6,6 +6,7 @@ import { FC, ReactElement, useContext, useEffect, useRef, useState } from "react
 import { TaskContext } from "../../context/TaskContext";
 import { ViewTaskContext } from "../../context/ViewTaskContext";
 import { api } from "../../utilities/api";
+import DateInput from "../form/_DateInput";
 import TextArea from "../form/_TextArea";
 import TextInput from "../form/_TextInput";
 import ToDoInput from "./_ToDoInput";
@@ -16,14 +17,14 @@ const EditPanel: FC = (): ReactElement => {
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useState<string | undefined>(viewTaskContext.task.description);
   const [note, setNote] = useState<string | undefined>();
-  const [editTodo, setEditTodo] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>(viewTaskContext.task.title);
+  const [editDue, setEditDue] = useState<boolean>(false);
   const [addTodo, setAddTodo] = useState<boolean>(false);
+  const [newDate, setNewDate] = useState<Date | null>(viewTaskContext.task.date);
+  const [editTitle, setEditTitle] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const todoRef = useRef<HTMLDivElement>(null);
-
-  const openDescriptionBox = () => {
-    setEditDescription(true);
-  };
+  const titleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkIfClickedOutside = (e: MouseEvent) => {
@@ -33,6 +34,9 @@ const EditPanel: FC = (): ReactElement => {
       if (addTodo && todoRef.current && !todoRef.current.contains(e.target as HTMLElement)) {
         setAddTodo(false);
       }
+      if (editTitle && titleRef.current && !titleRef.current.contains(e.target as HTMLElement)) {
+        setEditTitle(false);
+      }
     };
 
     document.addEventListener("mousedown", checkIfClickedOutside);
@@ -40,20 +44,22 @@ const EditPanel: FC = (): ReactElement => {
     return () => {
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
-  }, [editDescription, addTodo]);
+  }, [editDescription, addTodo, editTitle]);
 
-  const saveEdit = async () => {
-    if (description) {
+  const saveEdit = async (value: {}) => {
+    if (value) {
       try {
-        const response: any = await api("/tasks/" + viewTaskContext.task.id, "PUT", { description: description });
+        const response: any = await api("/tasks/" + viewTaskContext.task.id, "PUT", value);
         if (response.affected !== 0) {
           taskContext.toggle();
-          viewTaskContext.task.description = description;
+          viewTaskContext.refresh(viewTaskContext.task.id);
         }
       } catch (err) {
         console.log(err);
       } finally {
         setEditDescription(false);
+        setEditDue(false);
+        setEditTitle(false);
       }
     }
   };
@@ -129,13 +135,53 @@ const EditPanel: FC = (): ReactElement => {
   return (
     <Box display="flex" flexDirection="row" marginTop={2}>
       <Box marginRight={2} width="1000px">
-        <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">
-          {viewTaskContext.task.title}
-        </Typography>
+        <div ref={titleRef} style={{ position: "relative", marginTop: "15px" }}>
+          {!editTitle && (
+            <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">
+              {viewTaskContext.task.title}
+              <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditTitle(true)} />
+            </Typography>
+          )}
+          {editTitle && (
+            <Box>
+              <TextInput
+                label=""
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+                defaultContent={viewTaskContext.task.title}
+              />
+              <DoneIcon
+                fontSize="large"
+                sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
+                onClick={() => saveEdit({ title: title })}
+              />
+            </Box>
+          )}
+        </div>
         <Typography variant="h5" mt={4}>
-          <b>Due Date: </b>
-          {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}
+          <b>
+            Due Date: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDue(!editDue)} />
+          </b>
         </Typography>
+        {!editDue && (
+          <Typography variant="h6" m={2} mt={1} ml={4}>
+            {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}
+          </Typography>
+        )}
+        {editDue && (
+          <Box display="flex" flexDirection="row">
+            <DateInput onChange={(date) => setNewDate(date)} value={newDate} />
+            <Button
+              variant="contained"
+              size="medium"
+              sx={{ marginLeft: "10px", width: "20px", color: "white" }}
+              onClick={() => saveEdit({ date: newDate })}
+            >
+              <DoneIcon />
+            </Button>
+          </Box>
+        )}
         <Typography variant="h5" mt={2}>
           <b>Status: </b>
           {viewTaskContext.task.status}
@@ -146,11 +192,12 @@ const EditPanel: FC = (): ReactElement => {
         </Typography>{" "}
         <Typography variant="h5" mt={2}>
           <b>
-            Description: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={openDescriptionBox} />
+            Description:{" "}
+            <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDescription(true)} />
           </b>
         </Typography>
         {!editDescription && (
-          <Typography variant="h6" m={2} mt={1}>
+          <Typography variant="h6" m={2} mt={1} ml={4}>
             {viewTaskContext.task.description}
           </Typography>
         )}
@@ -166,13 +213,13 @@ const EditPanel: FC = (): ReactElement => {
             <DoneIcon
               fontSize="large"
               sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
-              onClick={saveEdit}
+              onClick={() => saveEdit({ description: description })}
             />
           </div>
         )}
         <Typography variant="h5" mt={4}>
           <b>
-            Pre-requisite tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={openDescriptionBox} />
+            Pre-requisite tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
           </b>
         </Typography>
         <Typography variant="h5" mt={4}>

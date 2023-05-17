@@ -1,13 +1,13 @@
-import { FC, ReactElement, useState, useEffect, useContext } from "react";
-import { Typography, Box, Stack, Button, Alert } from "@mui/material";
+import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { FC, ReactElement, useContext, useEffect, useState } from "react";
+import { TaskContext } from "../../context/TaskContext";
+import { api } from "../../utilities/api";
+import DateInput from "./_DateInput";
+import SelectorInput from "./_SelectorInput";
 import TextArea from "./_TextArea";
 import TextInput from "./_TextInput";
-import SelectorInput from "./_SelectorInput";
-import DateInput from "./_DateInput";
-import { STATUS } from "./enums/STATUS";
 import { PRIORITY } from "./enums/PRIORITY";
-import { api } from "../../utilities/api";
-import { TaskContext } from "../../context/TaskContext";
+import { STATUS } from "./enums/STATUS";
 
 const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
@@ -59,7 +59,7 @@ const CreateTaskForm: FC = (): ReactElement => {
 
         <TextArea label="Description" onChange={(e) => setDesc(e.target.value)} />
 
-        <DateInput onChange={(date) => setDate(date)} value={date} />
+        <DateInput onChange={(date) => setDate(date)} value={date} label="Due Date" />
 
         <Box display="flex" flexDirection="row" gap={1}>
           <SelectorInput
