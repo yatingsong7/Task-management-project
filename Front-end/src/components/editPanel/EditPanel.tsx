@@ -133,8 +133,8 @@ const EditPanel: FC = (): ReactElement => {
   };
 
   return (
-    <Box display="flex" flexDirection="row" marginTop={2}>
-      <Box marginRight={2} width="1000px">
+    <Box display="flex" marginTop={2}>
+      <Box width="1000px">
         <div ref={titleRef} style={{ position: "relative", marginTop: "15px" }}>
           {!editTitle && (
             <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">

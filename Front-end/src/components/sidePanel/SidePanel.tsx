@@ -73,7 +73,7 @@ const SidePanel: FC = (): ReactElement => {
               },
             }}
           >
-            <Box marginX={5}>
+            <Box marginX={5} marginY={2}>
               {anchor === "right" && <CreateTaskForm />}
               {anchor === "top" && <></>}
               {anchor === "left" && <EditPanel />}
