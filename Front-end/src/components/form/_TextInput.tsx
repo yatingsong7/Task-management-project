@@ -4,14 +4,14 @@ import { FC, ReactElement } from "react";
 import { IInputField } from "./interfaces/IInputField";
 
 const TextInput: FC<IInputField> = (props): ReactElement => {
-  const { label = "", onChange = (e) => console.log(e.target.value), defaultContent = "", inputProps = {} } = props;
+  const { label = "", onChange = (e) => console.log(e.target.value), value = "", inputProps = {} } = props;
   return (
     <TextField
       id={label}
       label={label}
       variant="outlined"
       inputProps={inputProps}
-      defaultValue={defaultContent}
+      value={value}
       sx={{
         "& label": { color: "text.primary" },
         "& label.Mui-focused": { color: "primary.main" },
@@ -32,6 +32,5 @@ export default TextInput;
 
 TextInput.propTypes = {
   onChange: PropTypes.func,
-  defaultContent: PropTypes.string,
   inputProps: PropTypes.object,
 };

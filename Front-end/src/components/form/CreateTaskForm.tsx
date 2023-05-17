@@ -12,7 +12,7 @@ import { STATUS } from "./enums/STATUS";
 const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [desc, setDesc] = useState<string | undefined>(undefined);
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date | null | undefined>(new Date());
   const [priority, setPriority] = useState<PRIORITY>(PRIORITY.low);
   const [status, setStatus] = useState<STATUS>(STATUS.todo);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -35,6 +35,8 @@ const CreateTaskForm: FC = (): ReactElement => {
     const response = await api("/tasks", "POST", task);
     if (response) {
       setShowSuccess(true);
+      setTitle(undefined);
+      setDesc(undefined);
       taskContext.toggle();
     }
   };

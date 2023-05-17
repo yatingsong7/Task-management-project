@@ -1,6 +1,7 @@
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, Checkbox, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { FC, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { TaskContext } from "../../context/TaskContext";
@@ -9,22 +10,31 @@ import { api } from "../../utilities/api";
 import DateInput from "../form/_DateInput";
 import TextArea from "../form/_TextArea";
 import TextInput from "../form/_TextInput";
+import { ITaskApi } from "../tasksArea/interfaces/ITaskApi";
 import ToDoInput from "./_ToDoInput";
 
 const EditPanel: FC = (): ReactElement => {
   const viewTaskContext = useContext(ViewTaskContext);
+  const { error, isLoading, data, refetch } = useQuery(["task"], async () => {
+    if (viewTaskContext.task.id) return await api<ITaskApi>("/tasks/" + viewTaskContext.task.id, "GET");
+    else return {} as ITaskApi;
+  });
   const taskContext = useContext(TaskContext);
   const [editDescription, setEditDescription] = useState<boolean>(false);
-  const [description, setDescription] = useState<string | undefined>(viewTaskContext.task.description);
+  const [description, setDescription] = useState<string | undefined>(data && data.description);
   const [note, setNote] = useState<string | undefined>();
-  const [title, setTitle] = useState<string | undefined>(viewTaskContext.task.title);
+  const [title, setTitle] = useState<string | undefined>(data && data.title);
   const [editDue, setEditDue] = useState<boolean>(false);
   const [addTodo, setAddTodo] = useState<boolean>(false);
-  const [newDate, setNewDate] = useState<Date | null>(viewTaskContext.task.date);
+  const [newDate, setNewDate] = useState<Date | null | undefined>(data && data.date);
   const [editTitle, setEditTitle] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const todoRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    refetch();
+  }, [viewTaskContext.task.id]);
 
   useEffect(() => {
     const checkIfClickedOutside = (e: MouseEvent) => {
@@ -53,6 +63,7 @@ const EditPanel: FC = (): ReactElement => {
         if (response.affected !== 0) {
           taskContext.toggle();
           viewTaskContext.refresh(viewTaskContext.task.id);
+          refetch();
         }
       } catch (err) {
         console.log(err);
@@ -65,17 +76,16 @@ const EditPanel: FC = (): ReactElement => {
   };
 
   const addNote = async () => {
-    if (note) {
-      try {
-        const response: any = await api("/tasks/" + viewTaskContext.task.id + "/notes", "POST", { content: note });
+    try {
+      const response: any = await api("/tasks/" + viewTaskContext.task.id + "/notes", "POST", { content: note });
 
-        if (response.affected !== 0) {
-          viewTaskContext.refresh(viewTaskContext.task.id);
-          setNote("");
-        }
-      } catch (err) {
-        console.log(err);
+      if (response.affected !== 0) {
+        await refetch();
       }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setNote(undefined);
     }
   };
 
@@ -83,7 +93,7 @@ const EditPanel: FC = (): ReactElement => {
     try {
       const response: any = await api("/tasks/" + viewTaskContext.task.id + "/notes/" + id, "DELETE");
       if (response.affected !== 0) {
-        viewTaskContext.refresh(viewTaskContext.task.id);
+        refetch();
       }
     } catch (err) {
       console.log(err);
@@ -99,7 +109,7 @@ const EditPanel: FC = (): ReactElement => {
         });
 
         if (response.affected !== 0) {
-          viewTaskContext.refresh(viewTaskContext.task.id);
+          refetch();
         }
       } catch (err) {
         console.log(err);
@@ -114,7 +124,7 @@ const EditPanel: FC = (): ReactElement => {
       });
 
       if (response.affected !== 0) {
-        viewTaskContext.refresh(viewTaskContext.task.id);
+        refetch();
       }
     } catch (err) {
       console.log(err);
@@ -125,7 +135,7 @@ const EditPanel: FC = (): ReactElement => {
     try {
       const response: any = await api("/tasks/" + viewTaskContext.task.id + "/todos/" + todoId, "DELETE");
       if (response.affected !== 0) {
-        viewTaskContext.refresh(viewTaskContext.task.id);
+        refetch();
       }
     } catch (err) {
       console.log(err);
@@ -134,198 +144,209 @@ const EditPanel: FC = (): ReactElement => {
 
   return (
     <Box display="flex" marginTop={2}>
-      <Box width="1000px">
-        <div ref={titleRef} style={{ position: "relative", marginTop: "15px" }}>
-          {!editTitle && (
-            <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">
-              {viewTaskContext.task.title}
-              <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditTitle(true)} />
+      {!isLoading ? (
+        data && (
+          <Box width="1000px">
+            <div ref={titleRef} style={{ position: "relative", marginTop: "15px" }}>
+              {!editTitle && (
+                <Typography variant="h4" fontWeight={700} mt={2} textAlign="center">
+                  {data.title}
+                  <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditTitle(true)} />
+                </Typography>
+              )}
+              {editTitle && (
+                <Box>
+                  <TextInput
+                    label=""
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
+                    value={title ? title : data.title}
+                  />
+                  <DoneIcon
+                    fontSize="large"
+                    sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
+                    onClick={() => saveEdit({ title: title })}
+                  />
+                </Box>
+              )}
+            </div>
+            <Typography variant="h5" mt={4}>
+              <b>
+                Due Date:{" "}
+                <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDue(!editDue)} />
+              </b>
             </Typography>
-          )}
-          {editTitle && (
-            <Box>
-              <TextInput
-                label=""
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                }}
-                defaultContent={viewTaskContext.task.title}
-              />
-              <DoneIcon
-                fontSize="large"
-                sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
-                onClick={() => saveEdit({ title: title })}
-              />
-            </Box>
-          )}
-        </div>
-        <Typography variant="h5" mt={4}>
-          <b>
-            Due Date: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDue(!editDue)} />
-          </b>
-        </Typography>
-        {!editDue && (
-          <Typography variant="h6" m={2} mt={1} ml={4}>
-            {viewTaskContext.task.date && format(new Date(viewTaskContext.task.date), "dd MMM yyyy")}
-          </Typography>
-        )}
-        {editDue && (
-          <Box display="flex" flexDirection="row">
-            <DateInput onChange={(date) => setNewDate(date)} value={newDate} />
-            <Button
-              variant="contained"
-              size="medium"
-              sx={{ marginLeft: "10px", width: "20px", color: "white" }}
-              onClick={() => saveEdit({ date: newDate })}
-            >
-              <DoneIcon />
-            </Button>
-          </Box>
-        )}
-        <Typography variant="h5" mt={2}>
-          <b>Status: </b>
-          {viewTaskContext.task.status}
-        </Typography>
-        <Typography variant="h5" mt={2}>
-          <b>Priority: </b>
-          {viewTaskContext.task.priority}
-        </Typography>{" "}
-        <Typography variant="h5" mt={2}>
-          <b>
-            Description:{" "}
-            <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDescription(true)} />
-          </b>
-        </Typography>
-        {!editDescription && (
-          <Typography variant="h6" m={2} mt={1} ml={4}>
-            {viewTaskContext.task.description}
-          </Typography>
-        )}
-        {editDescription && (
-          <div style={{ position: "relative", marginTop: "15px", marginRight: "10px" }} ref={ref}>
-            <TextArea
-              label=""
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-              defaultContent={viewTaskContext.task.description}
-            />
-            <DoneIcon
-              fontSize="large"
-              sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
-              onClick={() => saveEdit({ description: description })}
-            />
-          </div>
-        )}
-        <Typography variant="h5" mt={4}>
-          <b>
-            Related tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
-          </b>
-        </Typography>
-        <Typography variant="h5" mt={4}>
-          <b>To do list: </b>
-          <Box display="flex" flexDirection="column">
-            {viewTaskContext.task.todos &&
-              viewTaskContext.task.todos.map((t) => {
-                return (
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    key={t.id}
-                    padding="1px"
-                    borderRadius={2}
-                    sx={{ "&:hover": { backgroundColor: "#5C469C" } }}
-                  >
-                    <Box display="flex" flexDirection="row" alignItems="center">
-                      <Checkbox
-                        onChange={(e) => handleCheckTodo(e.target.checked, t.id)}
-                        checked={t.checked === 0 ? false : true}
-                      />
-                      <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
-                        {t.position !== 0 && t.position + ". "}
-                      </Typography>
-                      <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
-                        {t.title}
-                      </Typography>
-                    </Box>
-
-                    <Typography
-                      style={{
-                        fontStyle: "italic",
-                        textDecoration: "underline",
-                        cursor: "pointer",
-                        marginLeft: "10px",
-                        marginRight: "10px",
-                      }}
-                      onClick={() => handleDeleteTodo(t.id)}
-                    >
-                      Delete
-                    </Typography>
-                  </Box>
-                );
-              })}
-            {!addTodo && (
-              <Button variant="contained" sx={{ alignSelf: "end", marginTop: "5px" }} onClick={() => setAddTodo(true)}>
-                Add an item
-              </Button>
+            {!editDue && (
+              <Typography variant="h6" m={2} mt={1} ml={4}>
+                {data.date && format(new Date(data.date), "dd MMM yyyy")}
+              </Typography>
             )}
-            {addTodo && (
-              <div ref={todoRef}>
-                <ToDoInput handleSave={handleSaveToDo} />
+            {editDue && (
+              <Box display="flex" flexDirection="row">
+                <DateInput onChange={(date) => setNewDate(date)} value={newDate ? newDate : data.date} />
+                <Button
+                  variant="contained"
+                  size="medium"
+                  sx={{ marginLeft: "10px", width: "20px", color: "white" }}
+                  onClick={() => saveEdit({ date: newDate })}
+                >
+                  <DoneIcon />
+                </Button>
+              </Box>
+            )}
+            <Typography variant="h5" mt={2}>
+              <b>Status: </b>
+              {data.status}
+            </Typography>
+            <Typography variant="h5" mt={2}>
+              <b>Priority: </b>
+              {data.priority}
+            </Typography>{" "}
+            <Typography variant="h5" mt={2}>
+              <b>
+                Description:{" "}
+                <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => setEditDescription(true)} />
+              </b>
+            </Typography>
+            {!editDescription && (
+              <Typography variant="h6" m={2} mt={1} ml={4}>
+                {data.description}
+              </Typography>
+            )}
+            {editDescription && (
+              <div style={{ position: "relative", marginTop: "15px", marginRight: "10px" }} ref={ref}>
+                <TextArea
+                  label=""
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                  defaultContent={data.description}
+                />
+                <DoneIcon
+                  fontSize="large"
+                  sx={{ position: "absolute", bottom: "10px", right: "10px", cursor: "pointer" }}
+                  onClick={() => saveEdit({ description: description })}
+                />
               </div>
             )}
-          </Box>
-        </Typography>
-        <Box mt={4}>
-          <Typography variant="h5">
-            <b>Notes: </b>
-          </Typography>
-          <div style={{ position: "relative" }}>
-            <TextInput
-              label=""
-              value={note}
-              onChange={(e) => {
-                setNote(e.target.value);
-              }}
-              inputProps={{ style: { padding: 8 } }}
-            />
-            <EditIcon
-              sx={{ position: "absolute", right: "10px", bottom: "8px", cursor: "pointer" }}
-              onClick={addNote}
-            />
-          </div>
-          <Box>
-            {viewTaskContext.task.notes &&
-              viewTaskContext.task.notes.map((m, i) => {
-                return (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    paddingX={2}
-                    paddingY={1}
-                    marginY={1}
-                    borderRadius={1}
-                    sx={{ backgroundColor: "#5C469C" }}
-                    key={i}
-                  >
-                    <Typography fontSize={18}>{m.content}</Typography>
-                    <small style={{ alignSelf: "end", fontStyle: "italic" }}>
-                      {format(new Date(m.date), " dd MMM yyyy - HH:mm:ss")}
-                      <span
-                        style={{ marginLeft: "15px", textDecoration: "underline", cursor: "pointer" }}
-                        onClick={() => deleteNote(m.id)}
+            <Typography variant="h5" mt={4}>
+              <b>
+                Related tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
+              </b>
+            </Typography>
+            <Typography variant="h5" mt={4}>
+              <b>To do list: </b>
+              <Box display="flex" flexDirection="column">
+                {data.todos &&
+                  data.todos.map((t) => {
+                    return (
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        key={t.id}
+                        padding="1px"
+                        borderRadius={2}
+                        sx={{ "&:hover": { backgroundColor: "#5C469C" } }}
                       >
-                        Delete
-                      </span>
-                    </small>
-                  </Box>
-                );
-              })}
+                        <Box display="flex" flexDirection="row" alignItems="center">
+                          <Checkbox
+                            onChange={(e) => handleCheckTodo(e.target.checked, t.id)}
+                            checked={t.checked === 0 ? false : true}
+                          />
+                          <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
+                            {t.position !== 0 && t.position + ". "}
+                          </Typography>
+                          <Typography fontSize={18} sx={{ textDecorationLine: t.checked && "line-through" }}>
+                            {t.title}
+                          </Typography>
+                        </Box>
+
+                        <Typography
+                          style={{
+                            fontStyle: "italic",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                            marginLeft: "10px",
+                            marginRight: "10px",
+                          }}
+                          onClick={() => handleDeleteTodo(t.id)}
+                        >
+                          Delete
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+                {!addTodo && (
+                  <Button
+                    variant="contained"
+                    sx={{ alignSelf: "end", marginTop: "5px" }}
+                    onClick={() => setAddTodo(true)}
+                  >
+                    Add an item
+                  </Button>
+                )}
+                {addTodo && (
+                  <div ref={todoRef}>
+                    <ToDoInput handleSave={handleSaveToDo} />
+                  </div>
+                )}
+              </Box>
+            </Typography>
+            <Box mt={4}>
+              <Typography variant="h5">
+                <b>Notes: </b>
+              </Typography>
+              <div style={{ position: "relative" }}>
+                <TextInput
+                  label=""
+                  value={note || ""}
+                  onChange={(e) => {
+                    setNote(e.target.value);
+                  }}
+                  inputProps={{ style: { padding: 8 } }}
+                />
+                <EditIcon
+                  sx={{ position: "absolute", right: "10px", bottom: "8px", cursor: "pointer" }}
+                  onClick={addNote}
+                />
+              </div>
+              <Box>
+                {data.notes &&
+                  data.notes.map((m, i) => {
+                    return (
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        paddingX={2}
+                        paddingY={1}
+                        marginY={1}
+                        borderRadius={1}
+                        sx={{ backgroundColor: "#5C469C" }}
+                        key={i}
+                      >
+                        <Typography fontSize={18}>{m.content}</Typography>
+                        <small style={{ alignSelf: "end", fontStyle: "italic" }}>
+                          {format(new Date(m.date), " dd MMM yyyy - HH:mm:ss")}
+                          <span
+                            style={{ marginLeft: "15px", textDecoration: "underline", cursor: "pointer" }}
+                            onClick={() => deleteNote(m.id)}
+                          >
+                            Delete
+                          </span>
+                        </small>
+                      </Box>
+                    );
+                  })}
+              </Box>
+            </Box>
           </Box>
-        </Box>
-      </Box>
+        )
+      ) : (
+        <CircularProgress color="inherit" />
+      )}
     </Box>
   );
 };

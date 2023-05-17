@@ -1,5 +1,5 @@
 export interface IDateInput {
-  value: Date | null;
-  onChange?: (date: Date | null) => void;
+  value: Date | null | undefined;
+  onChange?: (date: Date | null | undefined) => void;
   label?: string;
 }
