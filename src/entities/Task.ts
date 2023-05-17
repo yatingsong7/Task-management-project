@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PRIORITY } from "../enums/priorityEnum";
 import { STATUS } from "../enums/statusEnum";
-import { Todo } from "./Todo";
 import Note from "./Note";
+import { Todo } from "./Todo";
 
 @Entity()
 export default class Task {
@@ -25,7 +25,7 @@ export default class Task {
   priority: PRIORITY;
 
   @OneToMany(() => Todo, (e) => e.task)
-  todo: Todo[];
+  todos: Todo[];
 
   @OneToMany(() => Note, (e) => e.task)
   notes: Note[];

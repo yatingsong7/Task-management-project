@@ -8,6 +8,7 @@ class TodoController {
     try {
       let allTodos = await AppDataSource.getRepository(Todo).find({
         order: {
+          checked: "ASC",
           position: "ASC",
         },
       });
@@ -42,10 +43,11 @@ class TodoController {
     const data = await todoRepo.findOne({
       where: { taskId: Number(req.params.taskId), id: Number(req.params.todoId) },
     });
-
+    console.log(req.params.todoId);
     if (!data) {
       return res.status(400).send("Not finding the todo");
     }
+
     req.body = { ...data, ...req.body };
     try {
       const result = await todoRepo.update(Number(req.params.todoId), req.body);
