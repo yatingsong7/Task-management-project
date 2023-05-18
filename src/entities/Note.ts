@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Task from "./Task";
 
 @Entity()
@@ -15,7 +15,7 @@ export default class Note {
   @CreateDateColumn({ type: "datetime", default: () => "CURRENT_TIMESTAMP(6)" })
   date: string;
 
-  @ManyToOne(() => Task, (e) => e.notes)
+  @ManyToOne(() => Task, (e) => e.notes, { onDelete: "CASCADE" })
   @JoinColumn({ name: "taskId", referencedColumnName: "id" })
   task: Task;
 }

@@ -18,7 +18,7 @@ export class Todo {
   @Column({ default: 0 })
   checked: number;
 
-  @ManyToOne(() => Task, (e) => e.todos)
+  @ManyToOne(() => Task, (e) => e.todos, { onDelete: "CASCADE" })
   @JoinColumn({ name: "taskId", referencedColumnName: "id" })
   task: Task;
 }

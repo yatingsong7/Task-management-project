@@ -24,13 +24,13 @@ export default class Task {
   @Column()
   priority: PRIORITY;
 
-  @OneToMany(() => Todo, (e) => e.task)
+  @OneToMany(() => Todo, (e) => e.task, { onDelete: "CASCADE" })
   todos: Todo[];
 
-  @OneToMany(() => Note, (e) => e.task)
+  @OneToMany(() => Note, (e) => e.task, { onDelete: "CASCADE" })
   notes: Note[];
 
-  @ManyToMany(() => Task, (e) => e.preTasks)
+  @ManyToMany(() => Task, (e) => e.preTasks, { onDelete: "CASCADE" })
   @JoinTable({
     name: "related_task_assign",
     joinColumn: { name: "preTaskId", referencedColumnName: "id" },
@@ -38,6 +38,6 @@ export default class Task {
   })
   mainTasks?: Task[];
 
-  @ManyToMany(() => Task, (e) => e.mainTasks)
+  @ManyToMany(() => Task, (e) => e.mainTasks, { onDelete: "CASCADE" })
   preTasks?: Task[];
 }
