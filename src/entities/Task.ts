@@ -24,7 +24,7 @@ export default class Task {
   @Column()
   priority: PRIORITY;
 
-  @OneToMany(() => Todo, (e) => e.task, { eager: true })
+  @OneToMany(() => Todo, (e) => e.task)
   todos: Todo[];
 
   @OneToMany(() => Note, (e) => e.task)

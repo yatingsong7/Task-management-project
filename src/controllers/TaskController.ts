@@ -68,6 +68,21 @@ class TaskController {
     }
   }
 
+  public async createRelatedTask(req: Request, res: Response): Promise<Response> {
+    try {
+      await AppDataSource.getRepository(Task)
+        .createQueryBuilder()
+        .insert()
+        .into("related_task_assign")
+        .values({ preTaskId: req.body.id, mainTaskId: Number(req.params.id) })
+        .execute();
+
+      return res.status(200).send({ success: true });
+    } catch (e) {
+      return res.status(500).send(e);
+    }
+  }
+
   public async update(req: Request, res: Response): Promise<Response> {
     const validationErrors = validationResult(req);
 
