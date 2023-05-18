@@ -1,3 +1,4 @@
+import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Checkbox, Typography } from "@mui/material";
@@ -7,8 +8,10 @@ import { TaskContext } from "../../context/TaskContext";
 import { ViewTaskContext } from "../../context/ViewTaskContext";
 import { api } from "../../utilities/api";
 import DateInput from "../form/_DateInput";
+import SelectorInput from "../form/_SelectorInput";
 import TextArea from "../form/_TextArea";
 import TextInput from "../form/_TextInput";
+import { ITaskApi } from "../tasksArea/interfaces/ITaskApi";
 import ToDoInput from "./_ToDoInput";
 
 const EditPanel: FC = (): ReactElement => {
@@ -22,10 +25,13 @@ const EditPanel: FC = (): ReactElement => {
   const [addTodo, setAddTodo] = useState<boolean>(false);
   const [newDate, setNewDate] = useState<Date | null | undefined>(viewTaskContext.task.date);
   const [editTitle, setEditTitle] = useState<boolean>(false);
+  const [addRelated, setAddRelated] = useState<boolean>(false);
+  const [allTasks, setAllTasks] = useState<ITaskApi[] | undefined>();
+  const [selectedTask, setSelectedTask] = useState<string | undefined>();
   const ref = useRef<HTMLDivElement>(null);
   const todoRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-  console.log(viewTaskContext.task);
+
   useEffect(() => {
     const checkIfClickedOutside = (e: MouseEvent) => {
       if (editDescription && ref.current && !ref.current.contains(e.target as HTMLElement)) {
@@ -131,6 +137,26 @@ const EditPanel: FC = (): ReactElement => {
     }
   };
 
+  const getAllTask = async () => {
+    const response: any = await api("/tasks", "GET");
+    setAllTasks(response);
+  };
+
+  const addRelatedTask = async () => {
+    try {
+      const response: any = await api("/tasks/" + viewTaskContext.task.id + "/related", "POST", {
+        id: selectedTask,
+      });
+      if (response.affected !== 0) {
+        viewTaskContext.refresh(viewTaskContext.task.id);
+        setSelectedTask(undefined);
+        setAddRelated(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box display="flex" marginTop={2}>
       <Box width="1000px">
@@ -217,9 +243,63 @@ const EditPanel: FC = (): ReactElement => {
           </div>
         )}
         <Typography variant="h5" mt={4}>
-          <b>
-            Related tasks: <EditIcon sx={{ paddingTop: "3px", cursor: "pointer" }} onClick={() => {}} />
-          </b>
+          <b>Related tasks:</b>
+          <Box display="flex" flexDirection="column">
+            <Box marginLeft={4} marginBottom={2}>
+              {viewTaskContext.task.preTasks?.map((p) => {
+                return <Typography fontSize={20}>{p.title}</Typography>;
+              })}
+            </Box>
+            {addRelated && (
+              <Box display="flex" flexDirection="row">
+                <SelectorInput
+                  label=""
+                  labelId=""
+                  id="related"
+                  value={selectedTask || ""}
+                  options={
+                    allTasks
+                      ? allTasks.map((t) => {
+                          return { label: t.title, value: t.id.toString() };
+                        })
+                      : [{ value: "", label: "Add Items" }]
+                  }
+                  onChange={(e) => setSelectedTask(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  size="medium"
+                  sx={{ marginLeft: "10px", width: "20px", color: "white" }}
+                  onClick={() => addRelatedTask()}
+                >
+                  <DoneIcon />
+                </Button>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  sx={{ marginLeft: "10px", width: "20px", color: "black" }}
+                  onClick={() => {
+                    setAddRelated(false);
+                  }}
+                >
+                  <ClearIcon />
+                </Button>
+              </Box>
+            )}
+
+            {!addRelated && (
+              <Button
+                variant="contained"
+                sx={{ alignSelf: "end", marginTop: "10px" }}
+                onClick={() => {
+                  setAddRelated(true);
+                  getAllTask();
+                }}
+              >
+                Add a related task
+              </Button>
+            )}
+          </Box>
         </Typography>
         <Typography variant="h5" mt={4}>
           <b>To do list: </b>
