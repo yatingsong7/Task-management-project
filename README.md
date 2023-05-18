@@ -3,10 +3,23 @@
 A web-based task management project built with **React**, **Node**, **Typescript**, **MySQL** and **Material UI**.
 This repository contains backend in main and the React front-end in [Front-end](https://github.com/yatingsong7/Task-management-project/tree/main/Front-end) folder.
 
+## Highlights
+
+- This project allows you to break down a big job into small tasks but view them all when you want. Unlike other project management tools that you can only view one task at one time, this project allows you to link related tasks and view them together in one page so you understand the whole progress of a big job.
+- This project combines project management with to-do lists. You can set up a to-do list to a task. You can select this task and select "include related tasks' to-do list". Then it will generate a to-do list for you including all you need to do for finishing a big job.
+
 Main board  
 ![](/Front-end/.github/main.png)
+Filter tasks
+![](/Front-end/.github/filter.png)
 Create a task  
 ![](/Front-end/.github/create.png)
+Edit a task
+![](/Front-end/.github/edit.png)
+View a task with related tasks
+![](/Front-end/.github/view.png)
+Generate a to-do list
+![](/Front-end/.github/to-do.png)
 
 ## Features
 
@@ -22,14 +35,14 @@ The following features have been implemented:
 ### Manage a task
 
 - Create tasks through Create a Task form(set task titles, descriptions, due dates, priorities and status). Default priority would be "LOW" and default status would be "TO DO"
-- Mark a to-do or in-progress task as completed
-- Mark a to-do or completed task as in-progress
+- Mark a task as to-do, in-progress and completed
+- Edit a task's title, due date, description
 - Delete a task
-- See a task status by border color of the task card (to-do: red, in-progree: yellow, completed: green). The colors match with the ones used in task count area
-- Error message for task created without title and due date
-- 'Successful created' message showing 3 seconds when tasks being successfully created
-- Add notes to a task; Delete a note
-- Edit a task's description
+- Add notes to a task; Delete a note; See timestamp for a note
+- Set up a to-do list to a task; Set up orders from 1 to 10 of the to-do items; Check and uncheck a to do item
+- Set up related tasks of a task (this allows you to link related tasks. For example, task A is doing an API for login and task B is doing the UI for login box. They are related to each other so you can link them.)
+- View details of a task and details of its related tasks, to see their to-do lists and progress in one panel
+- Select one task and generate today's to-do for you; Allows to include to-do of its related tasks
 
 ## Installation
 
@@ -107,7 +120,4 @@ prop-types
 
 - User login and logout
 - Order tasks based on due dates, status and priority
-- Set to-do list of a task
-- Set prerequisite tasks of a task
-- Select up to 5 tasks and see their progresses
-- Set priority for to-do list
+- Select up to 5 tasks and generate today's to-do list
