@@ -8,17 +8,17 @@ This repository contains backend in main and the React front-end in [Front-end](
 - This project allows you to break down a big job into small tasks but view them all when you want. Unlike other project management tools that you can only view one task at one time, this project allows you to link related tasks and view them together in one page so you understand the whole progress of a big job.
 - This project combines project management with to-do lists. You can set up a to-do list to a task. You can select this task and select "include related tasks' to-do list". Then it will generate a to-do list for you including all you need to do for finishing a big job.
 
-Main board  
+**Main board**
 ![](/Front-end/.github/main.png)
-Filter tasks
+**Filter tasks**
 ![](/Front-end/.github/filter.png)
-Create a task  
+**Create a task**
 ![](/Front-end/.github/create.png)
-Edit a task
+**Edit a task**
 ![](/Front-end/.github/edit.png)
-View a task with related tasks
+**View a task with related tasks**
 ![](/Front-end/.github/view.png)
-Generate a to-do list
+**Generate a to-do list**
 ![](/Front-end/.github/to-do.png)
 
 ## Features
