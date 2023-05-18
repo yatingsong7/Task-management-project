@@ -6,6 +6,7 @@ import { ViewTaskContext } from "../../context/ViewTaskContext";
 import CompareTaskPanel from "../compareTasksPanel/CompareTaskPanel";
 import EditPanel from "../editPanel/EditPanel";
 import CreateTaskForm from "../form/CreateTaskForm";
+import GenerateToDo from "../generateToDo/GenerateToDo";
 import Profile from "../profile/Profile";
 
 type Anchor = "top" | "right" | "bottom" | "left";
@@ -75,7 +76,7 @@ const SidePanel: FC = (): ReactElement => {
           >
             <Box marginX={5} marginY={2}>
               {anchor === "right" && <CreateTaskForm />}
-              {anchor === "top" && <></>}
+              {anchor === "top" && <GenerateToDo />}
               {anchor === "left" && <EditPanel />}
               {anchor === "bottom" && <CompareTaskPanel />}
             </Box>
